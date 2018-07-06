@@ -16,7 +16,7 @@ const flash      = require("connect-flash");
 
 mongoose.Promise = Promise;
 mongoose
-  .connect('mongodb://localhost/journey', {useMongoClient: true})
+  .connect(process.env.MONGODB_URI, {useMongoClient: true})
   .then(() => {
     console.log('Connected to Mongo!')
   }).catch(err => {
@@ -58,11 +58,10 @@ hbs.registerHelper('ifUndefined', (value, options) => {
       return options.fn(this);
   }
 });
-  
+// });
 
 // default value for title local
-app.locals.title = 'Express - Generated with IronGenerator';
-
+app.locals.title = 'Journey';
 
 // Enable authentication using session + passport
 app.use(session({
@@ -73,7 +72,12 @@ app.use(session({
 }))
 app.use(flash());
 require('./passport')(app);
-    
+
+app.use((req, res, next) => {
+  app.locals.req = req;
+  console.log(req.url)
+  next();
+});
 
 const index = require('./routes/index');
 app.use('/', index);

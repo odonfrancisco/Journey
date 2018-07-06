@@ -1,8 +1,48 @@
 body {
-  padding: 50px;
+  // padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
-a {
-  color: #00B7FF;
+html, head, body{
+  margin: 0;
+  padding: 0
+}
+
+#nav ul li a {
+  color: whitesmoke;
+}
+
+#nav ul{
+  display: flex;
+  list-style-type: none;
+  margin: 0;
+}
+
+@media (max-width: 768px){
+  #nav{
+    display: flex;
+    padding: 14px 0;
+    align-items: flex-end;
+    justify-content: space-between;
+    // justify-content: flex-end;
+    background-color: deeppink;
+  }
+
+  #nav text{
+    font-size: 3vw;
+  }
+  
+  #nav ul li{
+    margin-right: 2vw;
+    font-size: 4.5vw;
+  }
+
+  #nav ul :last-child{
+    margin-right: 4vw;
+  }
+
+  .profile-pic{
+    height: 60px;
+  }
+
 }

@@ -6,6 +6,20 @@
   </head>
   <body>
 
+    <nav id="nav">
+      
+      <text>{{#if req.user}}<img class="profile-pic" src="{{req.user.profilePic}}">Welcome {{req.user.name}}{{/if}}</text>
+      
+      <ul>
+        {{#if req.user}}
+        <li><a href="/auth/logout">Logout :(</a></li>
+        {{else}}
+        <li><a href="/auth/signup">Sign Up!</a></li>
+        <li><a href="/auth/login">Login!</a></li>
+        {{/if}}
+      </ul>
+    </nav>
+
     {{{body}}}
 
     <script src='/javascripts/script.js'></script>
