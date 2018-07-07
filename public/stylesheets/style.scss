@@ -17,17 +17,16 @@ html, head, body{
   list-style-type: none;
   margin: 0;
 }
+#nav{
+  display: flex;
+  padding: 14px 0;
+  align-items: flex-end;
+  justify-content: space-between;
+  // justify-content: flex-end;
+  background-color: deeppink;
+}
 
 @media (max-width: 768px){
-  #nav{
-    display: flex;
-    padding: 14px 0;
-    align-items: flex-end;
-    justify-content: space-between;
-    // justify-content: flex-end;
-    background-color: deeppink;
-  }
-
   #nav text{
     font-size: 3vw;
   }
