@@ -1,15 +1,15 @@
 <form method="post" action="/events/create" enctype="multipart/form-data">
-    <input type="text" name="name" placeholder="Event Name">
+    <input type="text" name="name" placeholder="Event Name" required>
 
     <input type="text" name="description" placeholder="How Would You Describe This Magically?">
 
     <br><br>
     <label for="startDate">Start Date</label>
-    <input type="date" name="startDate">
+    <input type="date" name="startDate" required>
     <input type="time" name="startTime" value="00:00">
     <br>
     <label for="endDate">End Date</label>
-    <input type="date" name="endDate">
+    <input type="date" name="endDate" required>
     <input type="time" name="endTime" value="23:59">
 
     <br><br>

@@ -29,6 +29,8 @@ html, head, body {
   #nav ul :last-child {
     margin-right: 4vw; }
   .profile-pic {
-    height: 60px; } }
+    height: 60px; }
+  .event-pic {
+    width: 100%; } }
 
 /*# sourceMappingURL=style.css.map */

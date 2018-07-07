@@ -75,7 +75,7 @@ require('./passport')(app);
 
 app.use((req, res, next) => {
   app.locals.req = req;
-  console.log(req.url)
+  // console.log(req.url)
   next();
 });
 
