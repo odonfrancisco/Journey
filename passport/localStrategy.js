@@ -29,6 +29,23 @@ function validateEmail(email) {
   return re.test(String(email).toLowerCase());
 }
 
+function emailRepeat(email){
+  return User.findOne({'email':  email})
+    .then(user => {
+      if (user !== null){
+        // console.log('User exists:', user);
+        return false;
+      } else{
+        // console.log('NULL User:', user);
+        return true;
+      }
+    })
+    .catch(err => {
+      console.log('Email issues, check again:', err);
+      // next(); 
+    });
+}
+
 function validatePasswords(pass1, pass2) {
   return pass1 === pass2;
 }
@@ -41,8 +58,11 @@ passport.use('local-signup', new LocalStrategy(
       if (validateEmail(req.body.email) === false){
         return next(null, false, {message: 'Invalid Email'});
       }
+      if (emailRepeat(req.body.email) === true){
+        return next(null, false, {message: 'This Email is already in use'});
+      }
       if (validatePasswords(req.body.password, req.body.password2) === false){
-        return next(null, false, {message: 'Passwords Don\'t Match'})
+        return next(null, false, {message: 'Passwords Don\'t Match'});
       }
       User.findOne({
         'username': username
@@ -52,7 +72,7 @@ passport.use('local-signup', new LocalStrategy(
         if (user) {
           return next(null, false);
         } else {
-          const {name, username, email, password, groupId} = req.body;
+          const {name, username, email, phone, password, groupId} = req.body;
           let profilePic;
 
           if (req.file) profilePic = req.file.url;
@@ -60,7 +80,8 @@ passport.use('local-signup', new LocalStrategy(
           const newUser = new User({
             name,
             username, 
-            email, 
+            email,
+            phone,
             password: hashPass, 
             profilePic
           });
@@ -71,7 +92,7 @@ passport.use('local-signup', new LocalStrategy(
             return next(null, newUser);
           });
         }
-      })
-    })
+      });
+    });
     })
   );

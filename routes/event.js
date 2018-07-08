@@ -6,7 +6,7 @@ const { ensureLoggedIn, ensureLoggedOut} = require('connect-ensure-login');
 const uploadCloud = require('../config/cloudinary.js'); 
 
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.find({creatorId: req.session.passport.user})
+    Event.find({creatorId: req.session.passport.user}).sort({start: 1})
         .then(event => {
             res.render('events/index', {event});
             console.log(event);
