@@ -52,4 +52,33 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
         });
 });
 
+router.get('/edit/:id', (req, res, next) => {
+    Event.findOne({_id: req.params.id})
+        .then(event => {
+            User.find({}, {name:1, username: 1})
+                .then(users => {
+                    let userArr = [];
+                    users.forEach(e => {
+                        userArr.push(e.username);
+                    });
+                    // res.send(event);
+                    data = {
+                        user: userArr,
+                        event: event
+                    }
+                    console.log(userArr);
+                    // res.render('events/edit', {event});
+                })
+                .catch(err => {
+                    console.log('Wrecked, the users are busy playing hide n seek:', err);
+                    next();
+                });
+            res.render('events/edit', {event});
+        })
+        .catch(err => {
+            console.log('This event prefers to be private: ', err);
+            next();
+        });
+});
+
 module.exports = router;

@@ -3,12 +3,13 @@
 {{#each event}}
 <div>
     <img src="{{this.eventPic}}" class="event-pic">
-    <text>{{this.name}}</text>
+    <text>{{this.name}}</text><a href="/events/edit/{{this._id}}">Edit</a>
     <p>{{this.description}}</p>
     <p>{{this.start.date}}</p>
     <p>{{this.end.date}}</p>
     {{#if this.address.zip}}
     <p>Address: {{this.address.street}} {{this.address.apt}} {{this.address.city}} {{this.address.state}} {{this.address.zip}}</p>
     {{/if}}
+    
 </div>
 {{/each}}
