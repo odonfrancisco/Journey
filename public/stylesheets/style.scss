@@ -86,6 +86,10 @@ border-bottom: 1px solid #ddd;
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
 
+username{
+  text-transform: lowercase
+}
+
 @media (max-width: 768px){
   #nav text{
     font-size: 3vw;

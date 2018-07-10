@@ -4,6 +4,7 @@ const User          = require('../models/User');
 const bcrypt        = require('bcrypt');
 
 passport.use(new LocalStrategy((username, password, next) => {
+  username = username.toLowerCase();
   User.findOne({ username }, (err, foundUser) => {
     if (err) {
       next(err);
@@ -64,6 +65,7 @@ passport.use('local-signup', new LocalStrategy(
       if (validatePasswords(req.body.password, req.body.password2) === false){
         return next(null, false, {message: 'Passwords Don\'t Match'});
       }
+
       User.findOne({
         'username': username
       }, (err, user) => {
@@ -72,8 +74,10 @@ passport.use('local-signup', new LocalStrategy(
         if (user) {
           return next(null, false);
         } else {
-          const {name, username, email, phone, password, groupId} = req.body;
+          const {name, email, phone, password, groupId} = req.body;
           let profilePic;
+          console.log('Username before lowercase: ', req.body.username)
+          let username = req.body.username.toLowerCase();
 
           if (req.file) profilePic = req.file.url;
           const hashPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);

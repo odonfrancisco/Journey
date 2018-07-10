@@ -77,6 +77,9 @@ html, head, body {
 .show {
   display: block; }
 
+username {
+  text-transform: lowercase; }
+
 @media (max-width: 768px) {
   #nav text {
     font-size: 3vw; }
