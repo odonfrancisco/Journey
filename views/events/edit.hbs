@@ -1,9 +1,8 @@
-<form action="/events/edit/{{this._id}}" method="post" enctype="multipart/form-data">
-    <input type="text" name="name" value="{{this.name}}">
-    {{this.address}}
+<form action="/events/edit/{{data.event._id}}" method="post" enctype="multipart/form-data">
+    <input type="text" name="name" value="{{data.event.name}}">
     <br><br>
 
-    <input type="text" name="description" value="{{this.description}}">
+    <input type="text" name="description" value="{{data.event.description}}">
 
     <br><br>
 
@@ -12,22 +11,28 @@
 
     <br><br>
 
-    <input type="date" name="startDate">
-    <input type="time" name="startTime">
+    <input type="date" name="startDate" value="{{data.event.start.date}}">
+    <input type="time" name="startTime" value="{{data.event.start.time}}">
 
     <br>
 
-    <input type="date" name="endDate">
-    <input type="time" name="startTime">
+    <input type="date" name="endDate" value="{{data.event.end.date}}">
+    <input type="time" name="endTime" value="{{data.event.end.time}}">
+
+    <br><br>
+
+    <fieldset id="usersField" style="display:none">
+    </fieldset>
 
     <br><br>
 
     <label>Members</label>
 
     <div class="dropdown">
-        <input type="text" multiple placeholder="Search.." id="myInput" onkeyup="filterFunction(), showMembersInput()"><input type="button" value="Add" onclick="addMember()">
+        <input type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()">
+        <input type="button" value="Add" onclick="addMember()">
         <div id="myDropdown" class="dropdown-content">
-            {{#each userArr}}
+            {{#each data.user}}
             <a href="#{{this}}">{{this}}</a>
             {{/each}}
         </div>
@@ -36,10 +41,10 @@
     <br><br>
 
     <label>Address:</label>
-    <input type="text" name="street" value="{{this.address.street}}"><input type="text" name="apt" value="{{this.address.apt}}">
-    <input type="text" name="city" value="{{this.address.city}}">
+    <input type="text" name="street" value="{{data.event.address.street}}"><input type="text" name="apt" value="{{this.address.apt}}">
+    <input type="text" name="city" value="{{data.event.address.city}}">
 
-    <select name="state" id="state" value="{{this.address.state}}">
+    <select name="state" id="state" value="{{data.event.address.state}}">
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
         <option value="AZ">Arizona</option>
@@ -93,11 +98,13 @@
         <option value="WY">Wyoming</option>
     </select>
 
-    <input type="number" name="zip" value="{{this.address.zip}}">
+    <input type="number" name="zip" value="{{data.event.address.zip}}">
 
     <br><br>
 
     <label>Event Picture:</label>
     <input type="file" name="eventPic">
+
+    <input type="submit" value="Edit">
 
 </form>

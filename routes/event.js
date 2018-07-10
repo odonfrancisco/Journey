@@ -6,7 +6,7 @@ const { ensureLoggedIn, ensureLoggedOut} = require('connect-ensure-login');
 const uploadCloud = require('../config/cloudinary.js'); 
 
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.find({creatorId: req.session.passport.user}).sort({start: 1})
+    Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: ['Odon']}}]}).sort({start: 1})
         .then(event => {
             res.render('events/index', {event});
             console.log(event);
@@ -52,7 +52,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
         });
 });
 
-router.get('/edit/:id', (req, res, next) => {
+router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
     Event.findOne({_id: req.params.id})
         .then(event => {
             User.find({}, {name:1, username: 1})
@@ -67,16 +67,55 @@ router.get('/edit/:id', (req, res, next) => {
                         event: event
                     }
                     console.log(userArr);
-                    // res.render('events/edit', {event});
+                    console.log(data);
+                    res.render('events/edit', {data});
                 })
                 .catch(err => {
                     console.log('Wrecked, the users are busy playing hide n seek:', err);
                     next();
                 });
-            res.render('events/edit', {event});
+            // res.render('events/edit', {event});
         })
         .catch(err => {
             console.log('This event prefers to be private: ', err);
+            next();
+        });
+});
+
+router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple('pictures'), */ uploadCloud.single('eventPic'), (req, res, next) => {
+    const {name, description, startDate, startTime, endDate, endTime, users, street, apt, city, state, zip} = req.body;
+    const address = {
+        street, apt, city, state, zip
+    };
+    const start = {
+        date: startDate,
+        time: startTime
+    };
+    const end = {
+        date: endDate,
+        time: endTime
+    };
+
+    let eventPic;
+    if (req.file) eventPic = req.file.secure_url;
+
+
+    Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end, eventPic})
+        .then(event => {
+            if (users !== Array) event.guests.push(users);
+            if (users === Array) event.guests.push(...users);
+            event.save()
+                .then(event => {
+                    console.log(users)
+                    res.redirect(`/events/`/* ${event._id} */);
+                })
+                .catch(err => {
+                    console.log('Error with saving event:', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error with updating event:', err);
             next();
         });
 });
