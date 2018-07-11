@@ -1,0 +1,37 @@
+<img src="{{user.profilePic}}" class="profile-pic">
+{{user.name.first}} {{user.name.last}}  <a href="/users/edit/{{user._id}}"><input type="button" value="Edit Your Profile"></a>
+<br>
+
+Your Username: {{user.username}}<br>
+Your Email: {{user.email}}<br>
+Your Phone: {{user.phone}}<br>
+
+<br><br>
+
+{{#if user.events}}
+    Your Events <ul>
+        {{#each user.events}}
+            <li><a href="/events/{{this._id}}">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+{{/if}}
+
+<br><br>
+
+{{#if user.groups}}
+    Your Groups <ul>
+        {{#each user.groups}}
+            <li><a href="/groups/{{this._id}}">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+{{/if}}
+
+<br><br>
+
+{{#if user.friends}}
+    Your Friends <ul>
+        {{#each user.friends}}
+            <li><a href="/users/{{this._id}}">{{this.name}}</a></li>
+        {{/each}}
+    </ul>
+{{/if}}

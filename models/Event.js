@@ -32,6 +32,13 @@ const eventSchema = Schema({
         set: lowercase,
         unique: true
     },
+    comments: [{
+        content: String,
+        creatorId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        } 
+    }],
     name: {
         type: String,
         required: true

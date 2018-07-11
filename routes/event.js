@@ -21,18 +21,6 @@ router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
         })
 });
 
-router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.findById(req.params.id)
-        .then(event => {
-            // res.send(event);
-            res.render('events/show', {event});
-        })
-        .catch(err => {
-            console.log('Error in getting particular event: wassup: ', err);
-            next();
-        });
-});
-
 router.get('/create', ensureLoggedIn('/auth/login'), (req, res, next) => {
     res.render('events/create');
 });
@@ -62,13 +50,16 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
         address
     });
 
-    const id = newEvent._id.toString()
+    req.user.events.push(newEvent._id);
+    
+    const id = newEvent._id.toString();
 
     newEvent.eventId = id;
 
     newEvent.save()
         .then(event => {
             res.redirect('/events');
+            req.user.save();
         })
         .catch(err => {
             console.log('Yah nasty bruh, this event\'s too ugly for ya:', err);
@@ -206,6 +197,20 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         })
         .catch(err => {
             console.log('Error in deleting event, might have to call a doctor:', err);
+            next();
+        });
+});
+
+router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findById(req.params.id)
+        .then(event => {
+            if(event.creatorId == req.session.passport.user){
+                    event.yes = true;
+            }
+            res.render('events/show', {event});
+        })
+        .catch(err => {
+            console.log('Error in getting particular event: wassup: ', err);
             next();
         });
 });

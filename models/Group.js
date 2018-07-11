@@ -29,3 +29,7 @@ const groupSchema = Schema({
         attr: Schema.Types.Mixed
     }]
 });
+
+const Group = mongoose.model('Group', groupSchema);
+
+module.exports = Group;

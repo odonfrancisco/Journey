@@ -1,0 +1,28 @@
+<form action="/users/edit/{{user._id}}" method="post" enctype="multipart/form-data">
+    <input type="text" name="firstName" value="{{user.name.first}}">
+    <input type="text" name="lastName" value="{{user.name.last}}">
+
+    <br><br>
+    
+    <input type="text" name="username" value="{{user.username}}">
+    <br>
+    <input type="email" name="email" value="{{user.email}}">
+    <br>
+    <input type="tel" name="phone" value="{{user.phone}}">
+
+    <br><br>
+    <label>Change Your Password</label>
+    <input type="password" name="oldPassword" placeholder="Your Old password"><br>
+    <input type="password" name="password1" placeholder="New Password">
+    <input type="password" name="password2" placeholder="Confirm New Password">
+
+    <br><br>
+    <label>Update Profile Pic</label>
+    <input type="file" name="profilePic">
+
+    <br><br>
+
+    <input type="submit" value="Edit">
+</form>
+<br>
+<a href="/users/delete/{{user._id}}"><input type="button" value="Delete Yourself"></a>

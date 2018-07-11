@@ -36,6 +36,7 @@ const userSchema = new Schema({
   phone: String,
   events: [{ type: Schema.Types.ObjectId, ref: 'Event'}],
   groups: [{ type: Schema.Types.ObjectId, ref: 'Group'}],
+  friends: [{ type: Schema.Types.ObjectId, ref: 'User'}],
   profilePic: {
     type: String, 
     default: "https://wallpapertag.com/wallpaper/full/7/b/a/947973-mac-default-wallpapers-2560x1600-free-download.jpg"

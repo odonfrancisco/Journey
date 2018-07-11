@@ -86,6 +86,9 @@ const authRoutes = require('./routes/auth');
 app.use('/auth', authRoutes);
 
 const eventRoutes = require('./routes/event');
-app.use('/events', eventRoutes);      
+app.use('/events', eventRoutes);
+
+const userRoutes = require('./routes/user');
+app.use('/users', userRoutes);
 
 module.exports = app;
