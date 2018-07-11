@@ -80,7 +80,7 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
                     data = {
                         user: userArr,
                         event: event
-                    }
+                    };
                     // console.log(userArr);
                     // console.log(data);
                     res.render('events/edit', {data});
@@ -111,6 +111,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
         date: endDate,
         time: endTime
     };
+    console.log(req.body);
 
     let eventPic;
     if (req.file) eventPic = req.file.secure_url;
@@ -121,7 +122,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
     // Array which will hold all the id's found
     let usersArray = [];
 
-    let find;
+    let find = new Promise((resolve, reject) => {resolve();});
 
     // If single user is added to event
     if (typeof(users) === 'string') {
@@ -171,7 +172,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
             // If a user was added to event by event admin, then add user(s) id to guests array in event obj
             if (usersArray.length > 0) event.guests.push(usersArray);
 
-            if (req.file) event.eventPic = eventpic;
+            if (req.file) event.eventPic = eventPic;
 
             event.save()
                 .then(event => {

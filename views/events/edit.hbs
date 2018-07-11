@@ -44,7 +44,8 @@
     <input type="text" name="street" value="{{data.event.address.street}}"><input type="text" name="apt" value="{{this.address.apt}}">
     <input type="text" name="city" value="{{data.event.address.city}}">
 
-    <select name="state" id="state" value="{{data.event.address.state}}">
+    <select name="state" id="state">
+        <option value="{{data.event.address.state}}">{{data.event.address.state}}</option>
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>
         <option value="AZ">Arizona</option>
@@ -96,7 +97,7 @@
         <option value="WV">West Virginia</option>
         <option value="WI">Wisconsin</option>
         <option value="WY">Wyoming</option>
-    </select>
+    </select value="{{data.event.address.state}}">
 
     <input type="number" name="zip" value="{{data.event.address.zip}}">
 

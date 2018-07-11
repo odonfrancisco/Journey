@@ -71,7 +71,7 @@ const eventSchema = Schema({
         apt: String,
         city: String,
         state: String,
-        zip: Number
+        zip: String
     }
 }, {
     timestamps: {
