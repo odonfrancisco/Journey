@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
-function capitalize(val) {
+function lowercase(val) {
     if (typeof val !== 'string') val = '';
-    return val.charAt(0).toUpperCase() + val.substring(1);
+    return val.toLowerCase();
 }
 
 const pictureSchema = Schema({
@@ -29,7 +29,8 @@ const eventSchema = Schema({
     // Customizable ID for other members to join
     eventId: {
         type: String,
-        set: capitalize
+        set: lowercase,
+        unique: true
     },
     name: {
         type: String,

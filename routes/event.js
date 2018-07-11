@@ -8,13 +8,29 @@ const uploadCloud = require('../config/cloudinary.js');
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
     Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: [req.session.passport.user]}}]}).sort({start: 1})
         .then(event => {
+            event.forEach(e => {
+                if(e.creatorId == req.session.passport.user){
+                    e.yes = true;
+                }
+            });
             res.render('events/index', {event});
-            console.log(event);
         })
         .catch(err => {
             console.log('Dayum sun you got some work to do, these events be sneakin :', err);
             next();
         })
+});
+
+router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findById(req.params.id)
+        .then(event => {
+            // res.send(event);
+            res.render('events/show', {event});
+        })
+        .catch(err => {
+            console.log('Error in getting particular event: wassup: ', err);
+            next();
+        });
 });
 
 router.get('/create', ensureLoggedIn('/auth/login'), (req, res, next) => {
@@ -36,7 +52,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
     let eventPic;
     if(req.file) {eventPic = req.file.secure_url;}
 
-    const newEvent = new Event({
+    let newEvent = new Event({
         creatorId,
         name, 
         description,
@@ -45,6 +61,10 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
         eventPic,
         address
     });
+
+    const id = newEvent._id.toString()
+
+    newEvent.eventId = id;
 
     newEvent.save()
         .then(event => {
@@ -70,8 +90,8 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
                         user: userArr,
                         event: event
                     }
-                    console.log(userArr);
-                    console.log(data);
+                    // console.log(userArr);
+                    // console.log(data);
                     res.render('events/edit', {data});
                 })
                 .catch(err => {
@@ -88,7 +108,7 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
 
 router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple('pictures'), */ uploadCloud.single('eventPic'), (req, res, next) => {
     const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
-    let users = req.body;
+    let users = req.body.users;
     const address = {
         street, apt, city, state, zip
     };
@@ -108,12 +128,14 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
     let allUsers = [];
 
     // Array which will hold all the id's found
-    usersArray = [];
+    let usersArray = [];
+
+    let find;
 
     // If single user is added to event
     if (typeof(users) === 'string') {
         users = users.toLowerCase();
-        User.findOne({username: users}, {_id:1})
+        find = User.findOne({username: users}, {_id:1})
             .then(user => {
                 usersArray.push(user._id);
             })
@@ -122,7 +144,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
             });
     }
 
-    // console.log('Does users equal array: ', users == 'object');
+    // console.log('Does users equal object: ', typeof(users) == 'object');
     // console.log('This is users:', users);
     // console.log('Type of users', typeof(users))
 
@@ -140,7 +162,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
         };
         // console.log('This is userFind: ', userFind);
     
-        User.find(userFind, {_id: 1})
+        find = User.find(userFind, {_id: 1})
             .then(user => {
                 user.forEach(e => {
                     usersArray.push(e._id);
@@ -153,13 +175,16 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
     }
 
 
-    Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end, eventPic})
+    find.then(user => {Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end})
         .then(event => {
             // If a user was added to event by event admin, then add user(s) id to guests array in event obj
             if (usersArray.length > 0) event.guests.push(usersArray);
+
+            if (req.file) event.eventPic = eventpic;
+
             event.save()
                 .then(event => {
-                    console.log(usersArray)
+                    console.log('This is the usersArray:', usersArray)
                     res.redirect(`/events/`/* ${event._id} */);
                 })
                 .catch(err => {
@@ -169,6 +194,18 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
         })
         .catch(err => {
             console.log('Error with updating event:', err);
+            next();
+        });
+    })
+});
+
+router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findByIdAndRemove(req.params.id)
+        .then(event => {
+            res.redirect('/events');
+        })
+        .catch(err => {
+            console.log('Error in deleting event, might have to call a doctor:', err);
             next();
         });
 });

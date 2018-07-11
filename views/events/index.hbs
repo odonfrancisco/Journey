@@ -1,9 +1,13 @@
 <a href="/events/create"><input type="button" value="Create Event"></a>
 
+
 {{#each event}}
 <div>
-    <img src="{{this.eventPic}}" class="event-pic">
-    <text>{{this.name}}</text><a href="/events/edit/{{this._id}}">Edit</a>
+    <a href="/events/{{this._id}}"><img src="{{this.eventPic}}" class="event-pic"></a>
+    <text>{{this.name}}</text>
+    {{#if this.yes}}    
+        <a href="/events/edit/{{this._id}}">Edit</a>
+    {{/if}}
     <p>{{this.description}}</p>
     <p>{{this.start.date}}</p>
     <p>{{this.end.date}}</p>

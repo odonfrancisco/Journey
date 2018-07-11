@@ -1,0 +1,19 @@
+<img src="{{event.eventPic}}" class="event-pic">
+<a href="/events/edit/{{event._id}}"><button>Edit {{event.name}}</button></a>
+{{event.name}}<br>
+{{event.description}}<br>
+{{#with event.address}}
+    {{street}}
+    {{apt}}
+    {{city}}
+    {{state}}
+    {{zip}}
+{{/with}}
+{{#with event.start}}
+    Date: {{date}}
+    Time: {{time}}
+{{/with}}
+{{#with event.end}}
+    Date: {{date}}
+    Time: {{time}}
+{{/with}}
