@@ -74,15 +74,17 @@ passport.use('local-signup', new LocalStrategy(
         if (user) {
           return next(null, false);
         } else {
-          const {name, email, phone, password, groupId} = req.body;
+          const {firstName:first, lastName:last, email, phone, password, groupId} = req.body;
           let profilePic;
-          console.log('Username before lowercase: ', req.body.username)
           let username = req.body.username.toLowerCase();
 
           if (req.file) profilePic = req.file.url;
           const hashPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
           const newUser = new User({
-            name,
+            name: {
+              first,
+              last
+            },
             username, 
             email,
             phone,

@@ -2,6 +2,11 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 
+function capitalize(val) {
+    if (typeof val !== 'string') val = '';
+    return val.charAt(0).toUpperCase() + val.substring(1);
+}
+
 const pictureSchema = Schema({
     creatorId: String,
     picName: String,
@@ -11,24 +16,43 @@ const pictureSchema = Schema({
 
 const eventSchema = Schema({
     // Group to which it belongs to
-    groupId: String,
+    groupId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
+    },
     // Person who created it
-    creatorId: String,
+    creatorId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     // Customizable ID for other members to join
-    eventId: String,
-    name: String,
+    eventId: {
+        type: String,
+        set: capitalize
+    },
+    name: {
+        type: String,
+        required: true
+    },
     description: String,
     start: {
-        date: String,
+        date: {
+            type: String,
+            required: true
+        },
         time: String
     },
     end: {
-        date: String,
+        date: {
+            type: String,
+            required: true
+        },
         time: String
     },
     pictures: [pictureSchema],
     // Will be an array of guest id's apart from family
-    guests: [],
+    guests: [{ type: Schema.Types.ObjectId, ref: 'User'}],
     // A banner for the event page
     eventPic: {
         type: String,

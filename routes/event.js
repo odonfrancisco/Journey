@@ -6,10 +6,14 @@ const { ensureLoggedIn, ensureLoggedOut} = require('connect-ensure-login');
 const uploadCloud = require('../config/cloudinary.js'); 
 
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: ['Odon']}}]}).sort({start: 1})
+    Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: [req.session.passport.user]}}]}).sort({start: 1})
         .then(event => {
             res.render('events/index', {event});
             console.log(event);
+        })
+        .catch(err => {
+            console.log('Dayum sun you got some work to do, these events be sneakin :', err);
+            next();
         })
 });
 
@@ -83,7 +87,8 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
 });
 
 router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple('pictures'), */ uploadCloud.single('eventPic'), (req, res, next) => {
-    const {name, description, startDate, startTime, endDate, endTime, users, street, apt, city, state, zip} = req.body;
+    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
+    let users = req.body;
     const address = {
         street, apt, city, state, zip
     };
@@ -99,14 +104,62 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
     let eventPic;
     if (req.file) eventPic = req.file.secure_url;
 
+    // Var for arrray of search queries per user for their Id
+    let allUsers = [];
+
+    // Array which will hold all the id's found
+    usersArray = [];
+
+    // If single user is added to event
+    if (typeof(users) === 'string') {
+        users = users.toLowerCase();
+        User.findOne({username: users}, {_id:1})
+            .then(user => {
+                usersArray.push(user._id);
+            })
+            .catch(err => {
+                console.log('Error finding single user: ', err);
+            });
+    }
+
+    // console.log('Does users equal array: ', users == 'object');
+    // console.log('This is users:', users);
+    // console.log('Type of users', typeof(users))
+
+    // If more than one user is added to event
+    if (typeof(users) === 'object') {
+        users.forEach(e => {
+            e = e.toLowerCase();
+            userObj = {};
+            userObj.username = e;
+            allUsers.push(userObj);
+        });
+    
+        userFind = {
+            "$or": allUsers
+        };
+        // console.log('This is userFind: ', userFind);
+    
+        User.find(userFind, {_id: 1})
+            .then(user => {
+                user.forEach(e => {
+                    usersArray.push(e._id);
+                });
+                console.log('This is the user found using userfind: ', user);
+            })
+            .catch(err => {
+                console.log('Rip tryna find users using your custom variable: ', err);
+            });
+    }
+
 
     Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end, eventPic})
         .then(event => {
-            if (users !== Array) event.guests.push(users);
-            if (users === Array) event.guests.push(...users);
+            // If a user was added to event by event admin, then add user(s) id to guests array in event obj
+            if (usersArray.length > 0) event.guests.push(usersArray);
             event.save()
                 .then(event => {
-                    console.log(users)
+                    console.log(usersArray)
                     res.redirect(`/events/`/* ${event._id} */);
                 })
                 .catch(err => {

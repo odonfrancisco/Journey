@@ -8,7 +8,7 @@
 
     <nav id="nav">
       
-      <text>{{#if req.user}}<img class="profile-pic" src="{{req.user.profilePic}}">Welcome {{req.user.name}}{{/if}}</text>
+      <text>{{#if req.user}}<img class="profile-pic" src="{{req.user.profilePic}}">Welcome {{req.user.name.first}}{{/if}}</text>
       
       <ul>
         {{#if req.user}}

@@ -1,18 +1,41 @@
 const mongoose = require('mongoose');
 const Schema   = mongoose.Schema;
 
+function capitalize(val) {
+  if (typeof val !== 'string') val = '';
+  return val.charAt(0).toUpperCase() + val.substring(1);
+}
+
 const userSchema = new Schema({
-  name: String,
+  name: {
+    first: {
+      type: String,
+      set: capitalize,
+      required: true
+    },
+    last: {
+      type: String,
+      set: capitalize,
+      required: true
+    }
+  },
   username: {
     type: String,
     unique: true,
     required : true
   },
-  password: String,
-  email: String,
+  password: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    unique: true,
+    required: true
+  },
   phone: String,
-  events: [],
-  groups: [],
+  events: [{ type: Schema.Types.ObjectId, ref: 'Event'}],
+  groups: [{ type: Schema.Types.ObjectId, ref: 'Group'}],
   profilePic: {
     type: String, 
     default: "https://wallpapertag.com/wallpaper/full/7/b/a/947973-mac-default-wallpapers-2560x1600-free-download.jpg"
