@@ -19,6 +19,9 @@ function checkEditUser(){
 router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
     User.findById(req.params.id).populate('events', 'name').populate('groups', 'name').populate('friends', 'name')
         .then(user => {
+            if (user._id == req.session.passport.user){
+                user.yes = true;    
+            }
             res.render('users/show', {user});
         })
         .catch(err => {
@@ -75,6 +78,83 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (req, 
             console.log('Yo watchu doing with these routes?? Users be tryna delete themselves out here: ', err);
             next();
         });
+});
+
+router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (req, res, next) => {
+    let users = req.body;
+
+    // Var for arrray of search queries per user for their Id
+    let allUsers = [];
+
+    // Array which will hold all the id's found
+    let usersArray = [];
+
+    let find = new Promise((resolve, reject) => {resolve();});
+
+
+    console.log('Type of user: ', typeof(users));
+    console.log('Users:', users);
+
+    if (typeof(users.users) == 'string') {
+        users = users.users.toLowerCase();
+        find = User.findOne({username: users}, {_id:1})
+            .then(user => {
+                usersArray.push({
+                    '_id': user._id 
+                });
+                console.log('usersArray from one added friend: ', usersArray);
+            })
+            .catch(err => {
+                console.log('Error finding single user: ', err);
+            });
+    }
+
+    if (typeof(users.users) === 'object') {
+        users.users.forEach(e => {
+            e = e.toLowerCase();
+            userObj = {};
+            userObj.username = e;
+            allUsers.push(userObj);
+        });
+    
+        userFind = {
+            "$or": allUsers
+        };
+        // console.log('This is userFind: ', userFind);
+    
+        find = User.find(userFind, {_id: 1})
+            .then(user => {
+                user.forEach(e => {
+                    usersArray.push(e._id);
+                });
+                console.log('This is the user found using userfind: ', user);
+            })
+            .catch(err => {
+                console.log('Rip tryna find users using your custom variable: ', err);
+            });
+    }
+
+    console.log(usersArray);
+    console.log(allUsers);
+
+    find.then(user => User.findById(req.params.id)
+        .then(user => {
+            user.friends.push(...usersArray);
+            console.log('user.friends after pushing usersArray: ', user.friends)
+            user.save()
+                .then(user => {
+                    res.redirect(`/users/${user._id}`);
+                })
+                .catch(err => {
+                    console.log('Error in saving friend afterpushing usersArray: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Watchu doing up in here, this user is an introvert and don\'t need no friends:', err);
+            next();
+        })
+    )
 });
 
 module.exports = router;

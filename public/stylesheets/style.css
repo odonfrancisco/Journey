@@ -80,6 +80,9 @@ html, head, body {
 username {
   text-transform: lowercase; }
 
+#usersField {
+  border: none; }
+
 @media (max-width: 768px) {
   #nav text {
     font-size: 3vw; }
@@ -91,6 +94,18 @@ username {
   .profile-pic {
     height: 60px; }
   .event-pic {
-    width: 100%; } }
+    width: 100%; }
+  .event-pics-container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    padding: 10px; }
+  .event-pics-div {
+    margin-bottom: 20px;
+    padding: 10px 15px 10px 15px;
+    background-color: rgba(105, 81, 96, 0.733);
+    border-radius: 20px; }
+  .event-pics {
+    width: 100%;
+    border-radius: 20px; } }
 
 /*# sourceMappingURL=style.css.map */

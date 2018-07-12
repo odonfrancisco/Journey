@@ -126,12 +126,6 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictu
            pictures.push(pictureObj); 
         });
     }
-    
-    // creatorId: String,
-    // picName: String,
-    // picPath: String,
-    // description: String,
-
 
     let eventPic;
     if (req.file) eventPic = req.file.secure_url;
@@ -190,7 +184,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictu
     find.then(user => {Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end})
         .then(event => {
             // If a user was added to event by event admin, then add user(s) id to guests array in event obj
-            if (usersArray.length > 0) event.guests.push(usersArray);
+            if (usersArray.length > 0) event.guests.push(...usersArray);
 
             if (req.file) event.eventPic = eventPic;
 
@@ -225,7 +219,7 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
 });
 
 router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.findById(req.params.id)
+    Event.findById(req.params.id).populate('pictures.creatorId', 'name')
         .then(event => {
             if(event.creatorId == req.session.passport.user){
                     event.yes = true;

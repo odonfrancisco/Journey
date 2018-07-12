@@ -2,7 +2,7 @@
 {{#if event.yes}}
     <a href="/events/edit/{{event._id}}"><button>Edit {{event.name}}</button></a>
     {{else}}
-    {{!-- <a href="/events/edit/pictures/{{event._id}}"> --}}<button id="addPicture" onclick="showAddPictureForm()">Add Pictures</button>{{!-- </a> --}}
+    {{!-- <a href="/events/edit/pictures/{{event._id}}"> --}}<button id="addPicture" onclick="showForm('addPicture', 'picturesForm')">Add Pictures</button>{{!-- </a> --}}
 {{/if}}
 <form id="picturesForm" style="display:none" action="/events/edit/pictures/{{event._id}}" method="post" enctype="multipart/form-data">
     <input type="file" multiple name="pictures">
@@ -29,3 +29,13 @@ End {{#with event.end}}
     Date: {{date}}<br>
     Time: {{time}}
 {{/with}}
+<br>
+
+<div class="event-pics-container">
+    {{#each event.pictures}}
+    <div class="event-pics-div">
+        <img src="{{this.picPath}}" class="event-pics">
+        <text>By: {{this.creatorId.name.first}} {{this.creatorId.name.last}}</text>        
+    </div>
+    {{/each}}
+</div>

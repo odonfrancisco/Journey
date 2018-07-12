@@ -32,23 +32,27 @@ function filterFunction() {
 }
 
 function addMember(){
-  const field = document.getElementById('usersField');
-  // console.log(document.getElementById('userInput').value)
-  // if(document.getElementById('userInput').value.length > 0){
-    const input = document.getElementById('userInput').value;
+    const field = document.getElementById('usersField');
+    const input = document.getElementById('userInput').value.toLowerCase();
     let checkbox = document.createElement('input');
+    let label = document.createElement('label');
+
     checkbox.type = 'checkbox';
     checkbox.value = input;
     checkbox.name = 'users';
     checkbox.checked = true;
+
+    label.innerText = input;
+    console.log(label);
+
     field.appendChild(checkbox);
-  // }
+    field.appendChild(label);
   
 }
 
-function showAddPictureForm(){
-  const pictureButton = document.getElementById('addPicture');
-  const pictureForm = document.getElementById('picturesForm');
-  pictureForm.style = '';
-  pictureButton.style = 'display:none';
+function showForm(hideButton, displayForm){
+  const Button = document.getElementById(hideButton);
+  const Form = document.getElementById(displayForm);
+  Form.style = '';
+  Button.style = 'display:none';
 }
