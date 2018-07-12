@@ -45,3 +45,10 @@ function addMember(){
   // }
   
 }
+
+function showAddPictureForm(){
+  const pictureButton = document.getElementById('addPicture');
+  const pictureForm = document.getElementById('picturesForm');
+  pictureForm.style = '';
+  pictureButton.style = 'display:none';
+}

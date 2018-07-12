@@ -2,8 +2,12 @@
 {{#if event.yes}}
     <a href="/events/edit/{{event._id}}"><button>Edit {{event.name}}</button></a>
     {{else}}
-    <a href="/events/edit/pictures/{{event._id}}"><button>Add Pictures</button></a>
+    {{!-- <a href="/events/edit/pictures/{{event._id}}"> --}}<button id="addPicture" onclick="showAddPictureForm()">Add Pictures</button>{{!-- </a> --}}
 {{/if}}
+<form id="picturesForm" style="display:none" action="/events/edit/pictures/{{event._id}}" method="post" enctype="multipart/form-data">
+    <input type="file" multiple name="pictures">
+    <input type="submit" value="Add Pictures">
+</form>
 {{event.name}}<br>
 {{event.description}}<br>
 {{#if event.address.zip}}

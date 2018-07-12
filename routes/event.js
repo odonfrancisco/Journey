@@ -97,7 +97,7 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
-router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple('pictures'), */ uploadCloud.single('eventPic'), (req, res, next) => {
+router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictures'), /* uploadCloud.single('eventPic'), */ (req, res, next) => {
     const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
     let users = req.body.users;
     const address = {
@@ -111,7 +111,27 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
         date: endDate,
         time: endTime
     };
-    console.log(req.body);
+
+    let pictures = [];
+
+    console.log(req.files);
+    if (req.files){
+        req.files.forEach(e => {
+           const {originalname, secure_url} = e;
+           pictureObj = {
+               creatorId: req.session.passport.user,
+               picName: originalname,
+               picPath: secure_url,
+           };
+           pictures.push(pictureObj); 
+        });
+    }
+    
+    // creatorId: String,
+    // picName: String,
+    // picPath: String,
+    // description: String,
+
 
     let eventPic;
     if (req.file) eventPic = req.file.secure_url;
@@ -174,9 +194,11 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), /* uploadCloud.multiple(
 
             if (req.file) event.eventPic = eventPic;
 
+            if (req.files) event.pictures.push(...pictures);
+
             event.save()
                 .then(event => {
-                    console.log('This is the usersArray:', usersArray)
+                    // console.log('This is the usersArray:', usersArray)
                     res.redirect(`/events/`/* ${event._id} */);
                 })
                 .catch(err => {
@@ -212,6 +234,39 @@ router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         })
         .catch(err => {
             console.log('Error in getting particular event: wassup: ', err);
+            next();
+        });
+});
+
+router.post('/edit/pictures/:id', uploadCloud.array('pictures'), (req, res, next) => {
+    let pictures = [];
+    
+    if (req.files){
+        req.files.forEach(e => {
+           const {originalname, secure_url} = e;
+           pictureObj = {
+               creatorId: req.session.passport.user,
+               picName: originalname,
+               picPath: secure_url,
+           };
+           pictures.push(pictureObj); 
+        });
+    }
+
+    Event.findById(req.params.id)
+        .then(event => {
+            if (req.files) event.pictures.push(...pictures);
+            event.save()
+                .then(event => {
+                    res.redirect(`/events/${event._id}`);
+                })
+                .catch(err => {
+                    console.log('Issues saving event after adding ONLY pictures to it: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding event to add ONLY pictures to by ID:', err);
             next();
         });
 });

@@ -13,7 +13,7 @@ function checkEditUser(){
         } else {
             res.redirect('/auth/login');
         }
-    }
+    };
 }
 
 router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {

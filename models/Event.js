@@ -8,7 +8,10 @@ function lowercase(val) {
 }
 
 const pictureSchema = Schema({
-    creatorId: String,
+    creatorId: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     picName: String,
     picPath: String,
     description: String,
