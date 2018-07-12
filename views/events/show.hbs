@@ -1,10 +1,11 @@
 <img src="{{event.eventPic}}" class="event-pic">
 {{#if event.yes}}
     <a href="/events/edit/{{event._id}}"><button>Edit {{event.name}}</button></a>
+    <input type="button" value="Add Pictures" id="addPicture" onclick="showForm('addPicture', 'picturesForm')">
     {{else}}
     {{!-- <a href="/events/edit/pictures/{{event._id}}"> --}}<button id="addPicture" onclick="showForm('addPicture', 'picturesForm')">Add Pictures</button>{{!-- </a> --}}
 {{/if}}
-<form id="picturesForm" style="display:none" action="/events/edit/pictures/{{event._id}}" method="post" enctype="multipart/form-data">
+<form id="picturesForm" style="display:none" action="/events/pictures/add/{{event._id}}" method="post" enctype="multipart/form-data">
     <input type="file" multiple name="pictures">
     <input type="submit" value="Add Pictures">
 </form>
@@ -35,7 +36,19 @@ End {{#with event.end}}
     {{#each event.pictures}}
     <div class="event-pics-div">
         <img src="{{this.picPath}}" class="event-pics">
-        <text>By: {{this.creatorId.name.first}} {{this.creatorId.name.last}}</text>        
+        <text>By: {{this.creatorId.name.first}} {{this.creatorId.name.last}}</text><br>
+        {{#if this.description}}
+            <text>Description: {{this.description}}</text>        
+        {{/if}}
+        {{#if ../event.yes}}
+        <input type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
+        <form id="{{this.picPath}}" style="display:none" action="/events/pictures/edit/{{../event._id}}/{{this._id}}" method="post">
+            <input type="text" name="picName" value="{{this.picName}}">
+            <input type="text" name="description" placeholder="Description" value="{{this.description}}">
+            <input type="submit" value="Edit Picture">
+            <a href="/events/pictures/delete/{{../event._id}}/{{this._id}}"><input type="button" value="Delete Picture"></a>
+        </form>
+        {{/if}}
     </div>
     {{/each}}
 </div>

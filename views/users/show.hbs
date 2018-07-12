@@ -4,7 +4,6 @@
 {{#if user.yes}}
 <a href="/users/edit/{{user._id}}"><input type="button" value="Edit Your Profile"></a>
 <input type="button" value="Add Friends" onclick="showForm('addFriend', 'friendForm')" id="addFriend">
-{{/if}}
 
 <form id="friendForm" style="display:none" action="/users/add/friend/{{user._id}}" method="post">
     <fieldset id="usersField" {{!-- style="display:none" --}}>
@@ -21,7 +20,9 @@
     <br>
     <input type="submit" value="Add Friends">
 </form>
+{{/if}}
 <br>
+
 
 Your Username: {{user.username}}<br>
 Your Email: {{user.email}}<br>

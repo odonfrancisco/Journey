@@ -232,7 +232,7 @@ router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
-router.post('/edit/pictures/:id', uploadCloud.array('pictures'), (req, res, next) => {
+router.post('/pictures/add/:id', uploadCloud.array('pictures'), (req, res, next) => {
     let pictures = [];
     
     if (req.files){
@@ -264,5 +264,49 @@ router.post('/edit/pictures/:id', uploadCloud.array('pictures'), (req, res, next
             next();
         });
 });
+
+router.post('/pictures/edit/:eventId/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    const {picName, description} = req.body;
+    Event.findById(req.params.eventId, {pictures: {$elemMatch: {_id: req.params.picId}}}, {pictures: 1})
+        .then(event => {
+            // console.log('This is the event found: ', event);
+            event.pictures[0].picName = picName;
+            event.pictures[0].description = description;
+            event.save()
+                .then(event => {
+                    res.redirect(`/events/${event._id}`);
+                })
+                .catch(err => {
+                    console.log('Error in saving the event: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding event associated to picture: ', err);
+            next();
+        });
+});
+
+router.get('/pictures/delete/:eventId/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findById(req.params.eventId, {pictures: {$elemMatch: {_id: req.params.picId}}}, {pictures: 1})
+        .then(event => {
+            console.log('Event before deleting picture: ', event);
+            event.pictures[0].remove();
+            Event.update()
+                .then(event => {
+                    res.redirect(`/events/${req.params.eventId}`);
+                    console.log('Event updated: ', event);
+                })
+                .catch(err => {
+                    console.log('Error in saving event after deleting picture: ', err);
+                    next();
+                });
+            console.log("Event after deleting pictures: ", event);
+        })
+        .catch(err => {
+            console.log('Error in finding by Id: ', err);
+            next();
+        });
+})
 
 module.exports = router;
