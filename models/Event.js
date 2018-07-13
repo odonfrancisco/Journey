@@ -12,9 +12,13 @@ const pictureSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
+    // Name of picture
     picName: String,
+    // Path where image is being hosted through cloudinary
     picPath: String,
+    // Description for picture
     description: String,
+    // Array of comments tied to picture
     comments: [{
         content: String,
         creatorId: {
@@ -42,6 +46,7 @@ const eventSchema = Schema({
         set: lowercase,
         unique: true
     },
+    // Array of comments for event
     comments: [{
         content: String,
         creatorId: {
@@ -49,11 +54,14 @@ const eventSchema = Schema({
             ref: 'User'
         } 
     }],
+    // Name of the event
     name: {
         type: String,
         required: true
     },
+    // Description for Event
     description: String,
+    // Start date of event
     start: {
         date: {
             type: String,
@@ -61,6 +69,7 @@ const eventSchema = Schema({
         },
         time: String
     },
+    // End date of event
     end: {
         date: {
             type: String,
@@ -68,8 +77,9 @@ const eventSchema = Schema({
         },
         time: String
     },
+    // Array of pictures tied to event
     pictures: [pictureSchema],
-    // Will be an array of guest id's apart from family
+    // Array of guest id's apart from family
     guests: [{ type: Schema.Types.ObjectId, ref: 'User'}],
     // A banner for the event page
     eventPic: {

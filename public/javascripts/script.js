@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 }, false);
 
+// This function is for the phone number input, ideally want dashes between the numbers
 function addSpaces(initial){
   initial.replace("/([0-9]{3})/","\1 ");
   initial.replace("/[0-9]{3} ([0-9]{3})/","\1 ");
@@ -16,6 +17,7 @@ function showMembersInput() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
+// Sifts through all the users in user model while user is searching for friends to add
 function filterFunction() {
   var input, filter, ul, li, a, i;
   input = document.getElementById("userInput");
@@ -31,6 +33,8 @@ function filterFunction() {
   }
 }
 
+// This adds the friend added to a form on the page so user can see who they're adding
+// and it'll be uploaded through post method
 function addMember(){
     const field = document.getElementById('usersField');
     const input = document.getElementById('userInput').value.toLowerCase();
@@ -50,6 +54,7 @@ function addMember(){
   
 }
 
+// Deletes button and shows edit form for certain CRUD applications
 function showForm(hideButton, displayForm, hidebutton2){
   const Button = document.getElementById(hideButton);
   const Form = document.getElementById(displayForm);
