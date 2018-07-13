@@ -15,6 +15,13 @@ const pictureSchema = Schema({
     picName: String,
     picPath: String,
     description: String,
+    comments: [{
+        content: String,
+        creatorId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        } 
+    }]
 });
 
 const eventSchema = Schema({

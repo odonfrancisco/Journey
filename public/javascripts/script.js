@@ -50,9 +50,11 @@ function addMember(){
   
 }
 
-function showForm(hideButton, displayForm){
+function showForm(hideButton, displayForm, hidebutton2){
   const Button = document.getElementById(hideButton);
   const Form = document.getElementById(displayForm);
+  const button2 = document.getElementById(hidebutton2);
   Form.style = '';
   Button.style = 'display:none';
+  button2.style= 'display:none';
 }

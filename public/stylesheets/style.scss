@@ -94,6 +94,14 @@ username{
   border: none;
 }
 
+.event-pics-comments ul{
+  list-style-type: none;
+}
+
+.event-pics-comments .comment-content{
+  margin: 5px 0 18px 20px;
+}
+
 @media (max-width: 768px){
   #nav text{
     font-size: 3vw;

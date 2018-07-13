@@ -17,7 +17,7 @@ function checkEditUser(){
 }
 
 router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    User.findById(req.params.id).populate('events', 'name').populate('groups', 'name').populate('friends', 'name')
+    User.findById(req.params.id).populate('events', 'name').populate('groups', 'name').populate('friends', 'name username')
         .then(user => {
             if (user._id == req.session.passport.user){
                 user.yes = true;    

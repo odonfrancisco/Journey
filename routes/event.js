@@ -21,6 +21,20 @@ router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
         })
 });
 
+router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findById(req.params.id).populate('pictures.creatorId', 'name username').populate('pictures.comments.creatorId', 'name username')
+        .then(event => {
+            if(event.creatorId == req.session.passport.user){
+                    event.yes = true;
+            }
+            res.render('events/show', {event});
+        })
+        .catch(err => {
+            console.log('Error in getting particular event: wassup: ', err);
+            next();
+        });
+});
+
 router.get('/create', ensureLoggedIn('/auth/login'), (req, res, next) => {
     res.render('events/create');
 });
@@ -97,7 +111,7 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
-router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictures'), /* uploadCloud.single('eventPic'), */ (req, res, next) => {
+router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{name: 'pictures'}, {name: 'eventPic'}]), /* uploadCloud.array('pictures'), uploadCloud.single('eventPic'), */ (req, res, next) => {
     const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
     let users = req.body.users;
     const address = {
@@ -115,8 +129,8 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictu
     let pictures = [];
 
     console.log(req.files);
-    if (req.files){
-        req.files.forEach(e => {
+    if (req.files.pictures){
+        req.files.pictures.forEach(e => {
            const {originalname, secure_url} = e;
            pictureObj = {
                creatorId: req.session.passport.user,
@@ -128,7 +142,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictu
     }
 
     let eventPic;
-    if (req.file) eventPic = req.file.secure_url;
+    if (req.files.eventPic) eventPic = req.files.eventPic[0].secure_url;
 
     // Var for arrray of search queries per user for their Id
     let allUsers = [];
@@ -186,9 +200,9 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.array('pictu
             // If a user was added to event by event admin, then add user(s) id to guests array in event obj
             if (usersArray.length > 0) event.guests.push(...usersArray);
 
-            if (req.file) event.eventPic = eventPic;
+            if (req.files.eventPic) event.eventPic = eventPic;
 
-            if (req.files) event.pictures.push(...pictures);
+            if (req.files.pictures) event.pictures.push(...pictures);
 
             event.save()
                 .then(event => {
@@ -214,20 +228,6 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         })
         .catch(err => {
             console.log('Error in deleting event, might have to call a doctor:', err);
-            next();
-        });
-});
-
-router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.findById(req.params.id).populate('pictures.creatorId', 'name')
-        .then(event => {
-            if(event.creatorId == req.session.passport.user){
-                    event.yes = true;
-            }
-            res.render('events/show', {event});
-        })
-        .catch(err => {
-            console.log('Error in getting particular event: wassup: ', err);
             next();
         });
 });
@@ -287,26 +287,72 @@ router.post('/pictures/edit/:eventId/:picId', ensureLoggedIn('/auth/login'), (re
         });
 });
 
-router.get('/pictures/delete/:eventId/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    Event.findById(req.params.eventId, {pictures: {$elemMatch: {_id: req.params.picId}}}, {pictures: 1})
+router.get('/pictures/delete/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findOne({'pictures._id': req.params.picId})
         .then(event => {
-            console.log('Event before deleting picture: ', event);
-            event.pictures[0].remove();
-            Event.update()
+            console.log('Event found :', event.pictures.length);
+            event.pictures.id(req.params.picId).remove();
+            console.log('Event after deletion:', event.pictures.length);
+            event.save()
                 .then(event => {
-                    res.redirect(`/events/${req.params.eventId}`);
-                    console.log('Event updated: ', event);
+                    res.redirect(`/events/${event._id}`);
                 })
                 .catch(err => {
-                    console.log('Error in saving event after deleting picture: ', err);
+                    console.log('Error in saving event: ', err);
                     next();
                 });
-            console.log("Event after deleting pictures: ", event);
         })
         .catch(err => {
-            console.log('Error in finding by Id: ', err);
+            console.log('Error in finding event using pictures id:' ,err);
             next();
         });
-})
+});
+
+router.post('/pictures/comment/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    const {commentContent} = req.body;
+    Event.findOne({'pictures._id': req.params.picId})
+        .then(event => {
+            const pic = event.pictures.id(req.params.picId);
+            comment = {
+                content: commentContent,
+                creatorId: req.session.passport.user
+            };
+            pic.comments.push(comment);
+            event.save()
+                .then(event => {
+                    res.redirect(`/events/${event._id}`);
+                })
+                .catch(err => {
+                    console.log('Wrecked yourself up in tryna save the event after adding that comment to a picture: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Couldn\'t find any events in tryna add that comment to a picture, sorry about that: ', err);
+            next();
+        });
+});
+
+router.get('/pictures/comment/delete/:picId/:commentId', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    Event.findOne({'pictures._id': req.params.picId})
+        .then(event => {
+            // console.log('Event found :', event.pictures.id(req.params.picId).comments.length);
+            const pic = event.pictures.id(req.params.picId);
+            pic.comments.id(req.params.commentId).remove();
+            // console.log('Event after deletion:', event.pictures.id(req.params.picId));
+            event.save()
+                .then(event => {
+                    res.redirect(`/events/${event._id}`);
+                })
+                .catch(err => {
+                    console.log('Error in saving event: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding event using pictures id:' ,err);
+            next();
+        });
+});
 
 module.exports = router;

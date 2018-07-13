@@ -40,15 +40,50 @@ End {{#with event.end}}
         {{#if this.description}}
             <text>Description: {{this.description}}</text>        
         {{/if}}
+
+        {{#if comments}}
+            <div class="event-pics-comments">
+                Comments<ul>
+                    {{#each comments}}
+                        <li>{{this.creatorId.name.first}} {{this.creatorId.name.last}}
+                            <span>
+                                {{!-- {{this._id}} --}}
+                                {{#if ../../event.yes}}
+                                    <input id="comment-edit-button" type="button" value="Edit" onclick="showForm('comment-content', 'comment-form', 'comment-edit-button')">
+                                    <a href="/events/pictures/comment/delete/{{../this._id}}/{{this._id}}">
+                                    <input type="button" value="Delete"></a>
+                                {{/if}}
+                            </span>
+                        </li>
+                        <li id="comment-content" class="comment-content">{{this.content}}</li>
+                        {{#if ../../event.yes}}
+                            <li id="comment-form" style="display:none">
+                                <form method="post" action="/events/pictures/comment/edit/{{../this._id}}/{{this._id}}">
+                                    <input type="text" value="{{this.content}}" name="commentContent">
+                                    <input type="submit" value="Edit">
+                                </form>
+                            </li>
+                        {{/if}}
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+
+
         {{#if ../event.yes}}
         <input type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
         <form id="{{this.picPath}}" style="display:none" action="/events/pictures/edit/{{../event._id}}/{{this._id}}" method="post">
             <input type="text" name="picName" value="{{this.picName}}">
             <input type="text" name="description" placeholder="Description" value="{{this.description}}">
             <input type="submit" value="Edit Picture">
-            <a href="/events/pictures/delete/{{../event._id}}/{{this._id}}"><input type="button" value="Delete Picture"></a>
+            <a href="/events/pictures/delete/{{this._id}}"><input type="button" value="Delete Picture"></a>
         </form>
         {{/if}}
+        <input type="button" id="{{this._id}}comment" value="Add Comment!" onclick="showForm('{{this._id}}comment', '{{this._id}}comment-form')" method="post">
+        <form id="{{this._id}}comment-form" style="display:none" action="/events/pictures/comment/{{this._id}}" method="post">
+            <input type="text" name="commentContent" placeholder="Whatcha got to say?">
+            <input type="submit" value="Add!">
+        </form>
     </div>
     {{/each}}
 </div>
