@@ -3,9 +3,14 @@ const LocalStrategy = require('passport-local').Strategy;
 const User          = require('../models/User');
 const bcrypt        = require('bcrypt');
 
+function capitalize(val) {
+  if (typeof val !== 'string') val = '';
+  return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
+}
+
 passport.use(new LocalStrategy((username, password, next) => {
-  username = username.toLowerCase();
-  User.findOne({ username }, (err, foundUser) => {
+  username = capitalize(username)
+  User.findOne({ 'username' : username}, (err, foundUser) => {
     if (err) {
       next(err);
       return;
@@ -76,8 +81,9 @@ passport.use('local-signup', new LocalStrategy(
         } else {
           const {firstName:first, lastName:last, email, phone, password, groupId} = req.body;
           let profilePic;
-          let username = req.body.username.toLowerCase();
-
+          console.log('Username before capitalize:', req.body.username);
+          let username = capitalize(req.body.username);
+          console.log('Username after capitalize: ', username);
           if (req.file) profilePic = req.file.url;
           const hashPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
           const newUser = new User({

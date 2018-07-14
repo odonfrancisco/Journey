@@ -11,6 +11,12 @@ function addSpaces(initial){
   return initial;
 }
 
+// Capitalizes first letter of word and keeps rest lowercase. For Usernames
+function capitalize(val) {
+  if (typeof val !== 'string') val = '';
+  return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
+}
+
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
 function showMembersInput() {
@@ -37,7 +43,7 @@ function filterFunction() {
 // and it'll be uploaded through post method
 function addMember(){
     const field = document.getElementById('usersField');
-    const input = document.getElementById('userInput').value.toLowerCase();
+    const input = capitalize(document.getElementById('userInput').value);
     let checkbox = document.createElement('input');
     let label = document.createElement('label');
 

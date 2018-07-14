@@ -7,6 +7,12 @@ const { ensureLoggedIn, ensureLoggedOut} = require('connect-ensure-login');
 const uploadCloud = require('../config/cloudinary.js'); 
 const bcrypt = require('bcrypt');
 
+// Function to capitalize first letter of word and rest lowercase
+function capitalize(val) {
+    if (typeof val !== 'string') val = '';
+    return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
+}
+
 // Function to check if user is authorized to view certain page such as edit and delete
 function checkEditUser(){
     return function(req, res, next) {
@@ -197,7 +203,7 @@ router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (
 
     // If single user is added to event
     if (typeof(users.users) == 'string') {
-        users = users.users.toLowerCase();
+        users = capitalize(users.users);
         find = User.findOne({username: users}, {_id:1})
             .then(user => {
                 usersArray.push({
@@ -213,7 +219,7 @@ router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (
     // If more than one user is added to event
     if (typeof(users.users) === 'object') {
         users.users.forEach(e => {
-            e = e.toLowerCase();
+            e = capitalize(e);
             userObj = {};
             userObj.username = e;
             allUsers.push(userObj);
@@ -267,8 +273,11 @@ router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (
 router.get('/friends/delete/:id/:friendId', checkEditUser(), (req, res, next) => {
     User.findById(req.params.id)
         .then(user => {
+            // Finds index of friend within user's friends array
             const index = user.friends.indexOf(req.params.friendId);
+            // Deletes ID from friends array
             user.friends.splice(index, 1);
+            // Save User after deleting the friend from its array
             user.save()
                 .then(user => {
                     res.redirect(`/users/${user._id}`);
@@ -277,7 +286,6 @@ router.get('/friends/delete/:id/:friendId', checkEditUser(), (req, res, next) =>
                     console.log('Error in saving user after deleting its friend. Guest they\'re too attached: ', err);
                     next();
                 });
-            // res.send('YEETYEET');
         })
         .catch(err => {
             console.log('Error in finding user whose friend to delete: ', err);

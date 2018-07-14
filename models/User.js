@@ -3,7 +3,7 @@ const Schema   = mongoose.Schema;
 
 function capitalize(val) {
   if (typeof val !== 'string') val = '';
-  return val.charAt(0).toUpperCase() + val.substring(1);
+  return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
 }
 
 const userSchema = new Schema({
@@ -21,6 +21,7 @@ const userSchema = new Schema({
   },
   username: {
     type: String,
+    set: capitalize,
     unique: true,
     required : true
   },
