@@ -1,3 +1,4 @@
+// Form to edit event 
 <form action="/events/edit/{{data.event._id}}" method="post" enctype="multipart/form-data">
     <input type="text" name="name" value="{{data.event.name}}">
     <br><br>
@@ -23,6 +24,11 @@
 
     <fieldset id="usersField">
     </fieldset>
+
+    <br><br>
+    <input id="eventId-button" type="button" value="Change Event Id" onclick="showForm('eventId-button', 'eventId-label', 'eventId-button', 'eventId-input')">
+    <label style="display:none" for="eventId" id="eventId-label">Event Id</label>
+    <input id="eventId-input" type="text" placeholder="What'll your family identify with?" value="{{data.event.eventId}}" name="eventId" style="display:none">
 
     <br><br>
 

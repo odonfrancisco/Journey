@@ -76,7 +76,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkEditUser(), uploadC
             });
     }
     
-    // Ensures user validates their password
+    // Function that ensures user validates their password
     function validatePasswords(pass1, pass2) {
         return pass1 === pass2;
     }
@@ -85,10 +85,12 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkEditUser(), uploadC
     //     return next(null, false, {message: 'Invalid Email'});
     //   }
 
+    // Checks that password isn't already in use
     if (emailRepeat(req.body.email) === true){
         return next(null, false, {message: 'This Email is already in use'});
-        }
+    }
 
+    // Checks that User validates their password
     if(req.body.password && req.body.password2){
         if (validatePasswords(req.body.password, req.body.password2) === false){
             return next(null, false, {message: 'Passwords Don\'t Match'});

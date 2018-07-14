@@ -24,16 +24,43 @@
 <br>
 
 
-Your Username: {{user.username}}<br>
-Your Email: {{user.email}}<br>
-Your Phone: {{user.phone}}<br>
+{{#if user.yes}}
+Your
+{{else}}
+{{user.name.first}}'s
+{{/if}}
+Username: {{user.username}}<br>
+{{#if user.yes}}
+Your
+{{else}}
+{{user.name.first}}'s
+{{/if}}
+Email: {{user.email}}<br>
+{{#if user.yes}}
+Your
+{{else}}
+{{user.name.first}}'s
+{{/if}}
+Phone: {{user.phone}}<br>
 
 <br><br>
 
 {{#if user.events}}
-    Your Events <ul>
+    {{#if user.yes}}
+    Your
+    {{else}}
+    {{user.name.first}}'s
+    {{/if}}
+    Events {{#if user.yes}}
+                    <input id="edit-button" type="button" value="Edit" onclick="showList('edit-button', 'done-button', 'event-edit')">
+                    <input id="done-button" type="button" value="Done" style="display:none" onclick="showList('done-button', 'edit-button', 'event-edit')">
+                {{/if}}
+        <ul>
         {{#each user.events}}
             <li><a href="/events/{{this._id}}">{{this.name}}</a></li>
+            {{#if ../user.yes}}
+                <a class="event-edit" style="display:none" href="/events/edit/{{this._id}}"><input type="button" value="Edit"></a>
+            {{/if}}
         {{/each}}
     </ul>
 {{/if}}
@@ -41,7 +68,12 @@ Your Phone: {{user.phone}}<br>
 <br><br>
 
 {{#if user.groups}}
-    Your Groups <ul>
+    {{#if user.yes}}
+    Your
+    {{else}}
+    {{user.name.first}}'s
+    {{/if}}
+    Groups <ul>
         {{#each user.groups}}
             <li><a href="/groups/{{this._id}}">{{this.name}}</a></li>
         {{/each}}
@@ -51,9 +83,21 @@ Your Phone: {{user.phone}}<br>
 <br><br>
 
 {{#if user.friends}}
-    Your Friends <ul>
+    {{#if user.yes}}
+    Your
+    {{else}}
+    {{user.name.first}}'s
+    {{/if}}
+    Friends {{#if user.yes}}
+                    <input id="edit-friends-button" type="button" value="Edit" onclick="showList('edit-friends-button', 'done-friends-button', 'delete-friend')">
+                    <input id="done-friends-button" type="button" value="Done" style="display:none" onclick="showList('done-friends-button', 'edit-friends-button', 'delete-friend')">
+                {{/if}}
+    <ul>
         {{#each user.friends}}
             <li><a href="/users/{{this._id}}">{{this.name.first}} {{this.name.last}}</a></li>
+            {{#if ../user.yes}}
+                <a class="delete-friend" style="display:none" href="/users/friends/delete/{{../user._id}}/{{this._id}}"><input type="button" value="Delete"></a>
+            {{/if}}
         {{/each}}
     </ul>
 {{/if}}

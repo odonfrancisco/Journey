@@ -7,7 +7,7 @@ const uploadCloud = require('../config/cloudinary.js');
 
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Finds events that the user created or that they're a guest of
-    Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: [req.session.passport.user]}}]}).sort({start: 1})
+    Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: [req.session.passport.user]}}]}).sort({'start.date': 1})
         .then(event => {
             event.forEach(e => {
                 // Sets e.yes to true when user is admin of event
@@ -21,7 +21,7 @@ router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
         .catch(err => {
             console.log('Dayum sun you got some work to do, these events be sneakin :', err);
             next();
-        })
+        });
 });
 
 router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
@@ -136,7 +136,7 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
 // Post route to edit event
 router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{name: 'pictures'}, {name: 'eventPic'}]), /* uploadCloud.array('pictures'), uploadCloud.single('eventPic'), */ (req, res, next) => {
     // Destructure req.body
-    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
+    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip, eventId} = req.body;
     // Gets array of users that were added as guests from edit form
     let users = req.body.users;
     const address = {
@@ -225,7 +225,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{nam
     }
 
     // Promise to find event and update it after users and their Id's are found
-    find.then(user => {Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end})
+    find.then(user => {Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end, eventId})
         .then(event => {
             // If a user was added to event by event admin, then add user(s) id to guests array in event obj
             if (usersArray.length > 0) event.guests.push(...usersArray);
