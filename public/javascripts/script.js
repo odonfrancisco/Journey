@@ -89,3 +89,32 @@ function showList(button1, button2, listItems){
   }
 }
 
+const commentApi = axios.create({
+  baseURL: 'http://localhost:3000/api/events/pictures/comment'
+});
+
+function addComment(id){
+  commentApi.post(id, {
+    commentContent: document.getElementById(`${id}-addComment`).value
+  })
+  .then(response => {
+      // console.log(response)
+      window.location.reload();
+    });
+}
+
+function deleteComment(picId, commentId){
+  commentApi.post('/delete/' + picId + '/' + commentId)
+    .then(response => {
+      window.location.reload();
+    });
+}
+
+function editComment(picId, commentId){
+  commentApi.post('/edit/' + picId + '/' + commentId, {
+    commentContent: document.getElementById(`${commentId}-editComment`).value
+  })
+    .then(response => {
+      window.location.reload();
+    })
+}

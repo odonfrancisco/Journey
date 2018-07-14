@@ -306,6 +306,7 @@ router.post('/pictures/add/:id', uploadCloud.array('pictures'), (req, res, next)
         });
 });
 
+// Route to edit picture info
 router.post('/pictures/edit/:eventId/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Destructures name of picture and description from req.body
     const {picName, description} = req.body;

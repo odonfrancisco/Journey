@@ -47,19 +47,17 @@ End {{#with event.end}}
                     {{#each comments}}
                         <li>{{this.creatorId.name.first}} {{this.creatorId.name.last}}
                             <span>
-                                {{!-- {{this._id}} --}}
                                 {{#if ../../event.yes}}
-                                    <input id="comment-edit-button" type="button" value="Edit" onclick="showForm('comment-content', 'comment-form', 'comment-edit-button')">
-                                    <a href="/events/pictures/comment/delete/{{../this._id}}/{{this._id}}">
-                                    <input type="button" value="Delete"></a>
+                                    <input id="{{this._id}}-edit-button" type="button" value="Edit" onclick="showForm('{{this._id}}-content', '{{this._id}}-form', '{{this._id}}-edit-button')">
+                                    <input type="button" value="Delete" onclick="deleteComment('{{../this._id}}', '{{this._id}}')">
                                 {{/if}}
                             </span>
                         </li>
-                        <li id="comment-content" class="comment-content">{{this.content}}</li>
+                        <li id="{{this._id}}-content" class="comment-content">{{this.content}}</li>
                         {{#if ../../event.yes}}
-                            <li id="comment-form" style="display:none">
-                                <form method="post" action="/events/pictures/comment/edit/{{../this._id}}/{{this._id}}">
-                                    <input type="text" value="{{this.content}}" name="commentContent">
+                            <li id="{{this._id}}-form" style="display:none">
+                                <form method="post" onsubmit="editComment('{{../this._id}}', '{{this._id}}')">
+                                    <input id="{{this._id}}-editComment" type="text" value="{{this.content}}" name="commentContent">
                                     <input type="submit" value="Edit">
                                 </form>
                             </li>
@@ -79,11 +77,13 @@ End {{#with event.end}}
             <a href="/events/pictures/delete/{{this._id}}"><input type="button" value="Delete Picture"></a>
         </form>
         {{/if}}
-        <input type="button" id="{{this._id}}comment" value="Add Comment!" onclick="showForm('{{this._id}}comment', '{{this._id}}comment-form')" method="post">
-        <form id="{{this._id}}comment-form" style="display:none" action="/events/pictures/comment/{{this._id}}" method="post">
-            <input type="text" name="commentContent" placeholder="Whatcha got to say?">
+        <input type="button" id="{{this._id}}comment" value="Add Comment!" onclick="showForm('{{this._id}}comment', '{{this._id}}comment-form')">
+        <form id="{{this._id}}comment-form" style="display:none" onsubmit="addComment('{{this._id}}')">
+            <input id="{{this._id}}-addComment" type="text" name="commentContent" placeholder="Whatcha got to say?">
             <input type="submit" value="Add!">
         </form>
     </div>
     {{/each}}
 </div>
+
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>

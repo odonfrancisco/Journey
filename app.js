@@ -74,6 +74,7 @@ app.use(flash());
 require('./passport')(app);
 
 app.use((req, res, next) => {
+  // Allows request to be accessed from handlebars
   app.locals.req = req;
   // console.log(req.url)
   next();
@@ -90,5 +91,8 @@ app.use('/events', eventRoutes);
 
 const userRoutes = require('./routes/user');
 app.use('/users', userRoutes);
+
+const apiRoutes = require('./routes/api');
+app.use('/api', apiRoutes);
 
 module.exports = app;
