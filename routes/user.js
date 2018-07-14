@@ -263,4 +263,26 @@ router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (
     )
 });
 
+// Route to delete friend from user's friend array
+router.get('/friends/delete/:id/:friendId', checkEditUser(), (req, res, next) => {
+    User.findById(req.params.id)
+        .then(user => {
+            const index = user.friends.indexOf(req.params.friendId);
+            user.friends.splice(index, 1);
+            user.save()
+                .then(user => {
+                    res.redirect(`/users/${user._id}`);
+                })
+                .catch(err => {
+                    console.log('Error in saving user after deleting its friend. Guest they\'re too attached: ', err);
+                    next();
+                });
+            // res.send('YEETYEET');
+        })
+        .catch(err => {
+            console.log('Error in finding user whose friend to delete: ', err);
+            next();
+        });
+});
+
 module.exports = router;
