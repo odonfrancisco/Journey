@@ -1,4 +1,4 @@
-// Form to edit event 
+{{!-- Form to edit event --}} 
 <form action="/events/edit/{{data.event._id}}" method="post" enctype="multipart/form-data">
     <input type="text" name="name" value="{{data.event.name}}">
     <br><br>
@@ -22,9 +22,6 @@
 
     <br><br>
 
-    <fieldset id="usersField">
-    </fieldset>
-
     <br><br>
     <input id="eventId-button" type="button" value="Change Event Id" onclick="showForm('eventId-button', 'eventId-label', 'eventId-button', 'eventId-input')">
     <label style="display:none" for="eventId" id="eventId-label">Event Id</label>
@@ -32,10 +29,14 @@
 
     <br><br>
 
+    <fieldset id="usersField">
+    </fieldset>
+<br>
+
     <label>Members</label>
 
     <div class="dropdown">
-        <input type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()">
+        <input type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()" autocomplete="off">
         <input type="button" value="Add" onclick="addMember()">
         <div id="myDropdown" class="dropdown-content">
             {{#each data.user}}

@@ -1,0 +1,9 @@
+<a href="/groups/create"><input type="button" value="Create Group"></a>
+
+{{#each groups}}
+    <div>
+        <a href="/groups/{{this._id}}"><img class="event-pic" src="{{this.groupPic}}"></a>
+        <p>{{this.name}}</p>
+        <p>{{this.description}}</p>
+    </div>
+{{/each}}

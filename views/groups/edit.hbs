@@ -1,0 +1,42 @@
+{{!-- Form to edit group --}}
+<form action="/groups/edit/{{req.group._id}}" method="post" enctype="multipart/form-data">
+    <input type="text" name="name" value="{{req.group.name}}">
+
+    <br>
+
+    <input type="text" name="description" value="{{req.group.description}}">
+
+    <br>
+
+    <input type="file" name="groupPic">
+
+    <br>
+
+    <br><br>
+    <input id="groupId-button" type="button" value="Change group Id" onclick="showForm('groupId-button', 'groupId-label', 'groupId-button', 'groupId-input')">
+    <label style="display:none" for="groupId" id="groupId-label">Group Id</label>
+    <input id="groupId-input" type="text" placeholder="What'll your family identify with?" value="{{req.group.groupId}}" name="groupId" style="display:none">
+
+    <br></br>
+
+    <fieldset id="usersField">
+    </fieldset>
+
+    <br>
+
+    <label>Make Admin</label>
+
+    <div class="dropdown">
+        <input type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()" autocomplete="off">
+        <input type="button" value="Add" onclick="addMember()">
+        <div id="myDropdown" class="dropdown-content">
+            {{#each users}}
+            <a href="#{{this}}">{{this.username}}</a>
+            {{/each}}
+        </div>
+    </div>
+
+    <br><br>
+
+    <input type="submit" value="Edit">
+</form>

@@ -13,8 +13,13 @@ const groupSchema = Schema({
         type: String,
         required: true
     },
+    // Array of people allowed to edit group info
+    admin: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     // Unique user-set ID for other family members to add themselves to group
-    familyId: {
+    groupId: {
         type: String,
         set: lowercase,
         unique: true

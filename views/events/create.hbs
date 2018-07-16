@@ -1,6 +1,10 @@
-
 {{!-- Form to create a new event --}}
-<form method="post" action="/events/create" enctype="multipart/form-data">
+
+{{#if req.group}}
+    <form method="post" action="/groups/events/create/{{req.group._id}}" enctype="multipart/form-data">
+    {{else}}
+    <form method="post" action="/events/create" enctype="multipart/form-data">
+{{/if}}
     <input type="text" name="name" placeholder="Event Name" required>
 
     <input type="text" name="description" placeholder="How Would You Describe This Magically?">

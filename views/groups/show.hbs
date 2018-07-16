@@ -1,0 +1,39 @@
+<img src="{{group.groupPic}}" class="event-pic"><br>
+<a href="/groups/edit/{{group._id}}"><input type="button" value="Edit {{group.name}}"></a>
+<a href="/groups/events/create/{{group._id}}"><input type="button" value="Add Event For {{group.name}}"></a>
+<br>
+<span>{{group.name}}</span><br>
+<span>{{group.description}}</span>
+
+<br><br>
+
+
+Members: 
+    {{#if group.yes}}
+        <input id="edit-members-button" type="button" value="Edit" onclick="showList('edit-members-button', 'done-members-button', 'member-edit')">
+        <input id="done-members-button" type="button" value="Done" style="display:none" onclick="showList('done-members-button', 'edit-members-button', 'member-edit')">
+    {{/if}}
+<ul>
+    {{#each group.members}}
+        <li><a href="/users/{{this._id}}">
+        {{this.name.first}} {{this.name.last}}</a></li>
+        {{#if ../group.yes}}
+            <a style="display:none" class="member-edit" href="/groups/members/delete/{{this._id}}"><input type="button" value="Delete"></a>
+        {{/if}}
+    {{/each}}
+</ul>
+
+Events: 
+    {{#if group.yes}}
+        <input id="edit-events-button" type="button" value="Edit" onclick="showList('edit-events-button', 'done-events-button', 'event-edit')">
+        <input id="done-events-button" type="button" value="Done" style="display:none" onclick="showList('done-events-button', 'edit-events-button', 'event-edit')">
+    {{/if}}
+<ul>
+    {{#each group.events}}
+        <li><a href="/events/{{this._id}}">
+        {{this.name}}</a></li>
+        {{#if ../group.yes}}
+            <a style="display:none" class="event-edit" href="/groups/events/remove/{{this._id}}"><input type="button" value="Remove from {{../group.name}}"</a>
+        {{/if}}
+    {{/each}}
+</ul>

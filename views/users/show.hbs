@@ -73,9 +73,16 @@ Phone: {{user.phone}}<br>
     {{else}}
     {{user.name.first}}'s
     {{/if}}
-    Groups <ul>
+    Groups {{#if user.yes}}
+                <input id="edit-groups-button" type="button" value="Edit" onclick="showList('edit-groups-button', 'done-groups-button', 'group-edit')">
+                <input id="done-groups-button" type="button" value="Done" style="display:none" onclick="showList('done-groups-button', 'edit-groups-button', 'group-edit')">
+            {{/if}} 
+    <ul>
         {{#each user.groups}}
             <li><a href="/groups/{{this._id}}">{{this.name}}</a></li>
+            {{#if ../user.yes}}
+                <a class="group-edit" style="display:none" href="/groups/edit/{{this._id}}"><input type="button" value="Edit"></a>
+            {{/if}}
         {{/each}}
     </ul>
 {{/if}}

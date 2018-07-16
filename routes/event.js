@@ -5,6 +5,13 @@ const Event   = require('../models/Event');
 const { ensureLoggedIn, ensureLoggedOut} = require('connect-ensure-login');
 const uploadCloud = require('../config/cloudinary.js'); 
 
+// Function to capitalize first letter of word and rest lowercase
+function capitalize(val) {
+    if (typeof val !== 'string') val = '';
+    return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
+}
+
+// Route to display all events a user is a guest of
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Finds events that the user created or that they're a guest of
     Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: [req.session.passport.user]}}]}).sort({'start.date': 1})
@@ -24,6 +31,7 @@ router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
+// Route to display a particular event
 router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Finds event to display and populates the creators of its pictures  and the creator
     // of the comments within the pictures with their name and username
@@ -182,7 +190,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{nam
 
     // If single user is added to event
     if (typeof(users) === 'string') {
-        users = users.toLowerCase();
+        users = capitalize(users);
         // Changes var find to this promise statement in case single user is added
         find = User.findOne({username: users}, {_id:1})
             .then(user => {
@@ -200,7 +208,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{nam
     // If more than one user is added to event
     if (typeof(users) === 'object') {
         users.forEach(e => {
-            e = e.toLowerCase();
+            e = capitalize(e);
             userObj = {};
             userObj.username = e;
             allUsers.push(userObj);

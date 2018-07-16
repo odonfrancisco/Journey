@@ -95,4 +95,7 @@ app.use('/users', userRoutes);
 const apiRoutes = require('./routes/api');
 app.use('/api', apiRoutes);
 
+const groupRoutes = require('./routes/group');
+app.use('/groups', groupRoutes);
+
 module.exports = app;
