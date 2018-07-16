@@ -375,4 +375,40 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin')
     });
 });
 
+router.get('/members/delete/:groupId/:memberId', ensureLoggedIn('/auth/login'), checkUser('groupId', 'admin'), (req, res, next) =>{
+    // Finds user to remove from group
+    User.findById(req.params.memberId)
+        .then(user => {
+            // index of the groupId in user's 'groups' array
+            const index = user.groups.indexOf(req.params.groupId);
+            // Removes the groupId from user's 'group's array
+            user.groups.splice(index, 1);
+            // Saves user after removing groupId
+            user.save()
+                .then(user => {
+                    // Index of memberId in group's 'members' array
+                    const index = req.group.members.indexOf(req.params.memberId);
+                    // Removes memberId from group's 'members' array
+                    req.group.members.splice(index, 1);
+                    // Saves group then redirects to particular groups page
+                    req.group.save()
+                        .then(group => {
+                            res.redirect(`/groups/${group._id}`);
+                        })
+                        .catch(err => {
+                            console.log('Error in saving group after removing user from group and saving the user after deleting group id from its groups array: ', err);
+                            next();
+                        });
+                })
+                .catch(err => {
+                    console.log('Error in saving user found in attempting to remove user from a group: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding user to remove from a group: ', err);
+            next();
+        });
+});
+
 module.exports = router;
