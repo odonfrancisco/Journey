@@ -29,21 +29,7 @@ function checkUser(id, role){
     };
 }
 
-// Function to check that user is member of group to add events
-// function checkMember(id){
-//     return (req, res, next) => {
-//         Group.findById(req.params.id)
-//             .then(group => {
-//                 if (group.member.indexOf(req.session.passport.user) !== -1){
-//                     req.group = group;
-//                     return next();
-//                 } else {
-//                     res.redirect()
-//                 }
-//             })
-//     }
-// }
-
+// Route to show all user's groups
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
     Group.find({members: req.session.passport.user})
         .then(groups => {
@@ -183,7 +169,14 @@ router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
             if (group.admin.indexOf(req.session.passport.user) !== -1){
                 group.yes = true;
             }
-            res.render('groups/show', {group});
+            User.find({}, {username:1})
+                .then(users => {
+                    res.render('groups/show', {group, users})
+                })
+                .catch(err => {
+                    console.log('Error in finding all users in showing a particular group info: ', err);
+                    next();
+                });
         })
         .catch(err => {
             console.log('Error in finding particular group for whose info to display: ', err);
@@ -295,9 +288,8 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin')
         // Changes var find to this promise statement in case single user is added
         find = User.findOne({username: users}, {_id:1, groups:1})
             .then(user => {
-                user.groups.push(newGroup._id);
                 usersArray.push(user._id);
-                e.save()
+                user.save()
                     .catch(err => {
                         console.log('Error in saving user after creating a group and adding them as a member as the group and then adding group ID to their groups array: ', err);
                     });
@@ -325,7 +317,6 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin')
         find = User.find(userFind, {_id: 1, groups:1})
             .then(user => {
                 user.forEach(e => {
-                    user.groups.push(newGroup._id);
                     user.save()
                         .then(user => {
                             usersArray.push(e._id);
@@ -375,6 +366,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin')
     });
 });
 
+// Route to remove member from a group
 router.get('/members/delete/:groupId/:memberId', ensureLoggedIn('/auth/login'), checkUser('groupId', 'admin'), (req, res, next) =>{
     // Finds user to remove from group
     User.findById(req.params.memberId)
@@ -407,6 +399,125 @@ router.get('/members/delete/:groupId/:memberId', ensureLoggedIn('/auth/login'), 
         })
         .catch(err => {
             console.log('Error in finding user to remove from a group: ', err);
+            next();
+        });
+});
+
+// Route to use with axios to add members to a group
+router.post('/members/add/:groupId', ensureLoggedIn('/auth/login'), checkUser('groupId', 'admin'), (req, res, next) => {
+    // Destructure req.body
+    let {users} = req.body;
+
+    // Var for arrray of search queries for the Id of each user
+    let allUsers = [];
+
+    // Array which will hold all the user id's found
+    let usersArray = [];    
+
+    // Var to hold promise statement if users are added to group.
+    let find = new Promise((resolve, reject) => {resolve();});
+
+    // If single user is added as member
+    if (typeof(users) === 'string') {
+        users = capitalize(users);
+        // Changes var find to this promise statement in case single user is added
+        find = User.findOne({username: users}, {_id:1, groups:1})
+            .then(user => {
+                user.groups.push(req.group._id);
+                usersArray.push(user._id);
+                user.save()
+                    .catch(err => {
+                        console.log('Error in saving user after creating a group and adding them as a member as the group and then adding group ID to their groups array: ', err);
+                    });
+            })
+            .catch(err => {
+                console.log('Error finding single user to add to members array of group newly created: ', err);
+            });
+    }
+
+    // If more than one user is added to group
+    if (typeof(users) === 'object') {
+        users.forEach(e => {
+            e = capitalize(e);
+            userObj = {};
+            userObj.username = e;
+            allUsers.push(userObj);
+        });
+    
+        userFind = {
+            "$or": allUsers
+        };
+        // console.log('This is userFind: ', userFind);
+        
+        // Defines var find as a promise statement with all id's of users added
+        find = User.find(userFind, {_id: 1, groups:1})
+            .then(user => {
+                user.forEach(e => {
+                    user.groups.push(req.group._id);
+                    user.save()
+                        .then(user => {
+                            usersArray.push(e._id);
+                        })
+                        .catch(err => {
+                            console.log('Error in saving multiple users after adding group they were just added to to their groups array. This is in the creation of the group: ', err);
+                            next();
+                        })
+                    usersArray.push(e._id);
+                });
+                // console.log('This is the user found using userfind: ', user);
+            })
+            .catch(err => {
+                // console.log('Rip tryna find users using your custom variable: ', err);
+            });
+    }
+
+    find.then(user => {
+        req.group.members.push(...usersArray);
+        req.group.save()
+            .then(group => {
+                res.redirect(`/groups/${group._id}`)
+            })
+            .catch(err => {
+                console.log('Error in saving group after ONLY adding a member to it: ', err);
+                next();
+            });
+    })
+    .catch(err => {
+        console.log('Error in finding users to add to group when ONLY adding members to group: ', err);
+        next();
+    })
+
+});
+
+// Route to remove event from group
+router.get('/events/remove/:groupId/:eventId', ensureLoggedIn('/auth/login'), checkUser('groupId', 'admin'), (req, res, next) => {
+    // Finds event to remove from group
+    Event.findById(req.params.eventId)
+        .then(event => {
+            event.groupId = null;
+            event.save()
+                .then(event => {
+                    // Finds index of event within group's events array
+                    // Group is passed in the request in my checkUser middleware
+                    const index = req.group.events.indexOf(event._id);
+                    // Removes event ID from group's events array
+                    req.group.events.splice(index, 1);
+                    req.group.save()
+                        .then(group => {
+                            res.redirect(`/groups/${group._id}`);
+                        })
+                        .catch(err => {
+                            console.log('Error in saving group after removing event from group:', err);
+                            next();
+                        });
+                })
+                .catch(err => {
+                    console.log('Error in saving event after removing its attachment to a groupId: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding event whom to remove from group and remove groupId: ', err);
             next();
         });
 });

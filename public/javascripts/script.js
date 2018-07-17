@@ -66,8 +66,8 @@ function showForm(hideButton, displayForm, hidebutton2, hidebutton3){
   const Form = document.getElementById(displayForm);
   const button2 = document.getElementById(hidebutton2);
   const button3 = document.getElementById(hidebutton3);
-  Form.style = '';
   Button.style = 'display:none';
+  Form.style = '';
   button2.style= 'display:none';
   button3.style= '';
 }
@@ -116,5 +116,19 @@ function editComment(picId, commentId){
   })
     .then(response => {
       window.location.reload();
-    })
+    });
+}
+
+const groupApi = axios.create({
+  baseURL: 'http://localhost:3000/groups'
+});
+
+
+function addGroupMember(groupId){
+  groupApi.post('/members/add/' + groupId, {
+    users: document.getElementsByClassName('users')
+  })
+  .then(response => {
+    window.location.reload();
+  });
 }

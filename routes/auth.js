@@ -14,7 +14,7 @@ authRoutes.get("/login", ensureLoggedOut(), (req, res, next) => {
   res.render("auth/login", { "message": req.flash("error") });
 });
 
-authRoutes.post("/login", ensureLoggedOut(), passport.authenticate("local", {
+authRoutes.post("/login", ensureLoggedOut(), passport.authenticate("local-login", {
   successRedirect: "/",
   failureRedirect: "/auth/login",
   failureFlash: true,

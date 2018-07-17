@@ -7,11 +7,25 @@
 
 <br><br>
 
-
 Members: 
     {{#if group.yes}}
         <input id="edit-members-button" type="button" value="Edit" onclick="showList('edit-members-button', 'done-members-button', 'member-edit')">
+        <input id="add-members-button" type="button" value="Add Members" onclick="showForm('add-members-button', 'add-members-form', 'edit-members-button')">
         <input id="done-members-button" type="button" value="Done" style="display:none" onclick="showList('done-members-button', 'edit-members-button', 'member-edit')">
+        <form id="add-members-form" action="/groups/members/add/{{group._id}}" method="post" style="display:none">
+            <div id="usersField">
+            </div>
+            <div class="dropdown">
+                <input type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()" autocomplete="off">
+                <input type="button" value="Add" onclick="addMember()">
+                <div id="myDropdown" class="dropdown-content">
+                    {{#each users}}
+                    <a href="#{{this.username}}">{{this.username}}</a>
+                    {{/each}}
+                </div>
+            </div>
+            <input type="submit" value="Add Members">
+        </form>
     {{/if}}
 <ul>
     {{#each group.members}}
@@ -33,7 +47,7 @@ Events:
         <li><a href="/events/{{this._id}}">
         {{this.name}}</a></li>
         {{#if ../group.yes}}
-            <a style="display:none" class="event-edit" href="/groups/events/remove/{{this._id}}"><input type="button" value="Remove from {{../group.name}}"</a>
+            <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}"><input type="button" value="Remove from {{../group.name}}"</a>
         {{/if}}
     {{/each}}
 </ul>

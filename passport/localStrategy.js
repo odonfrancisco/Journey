@@ -8,7 +8,7 @@ function capitalize(val) {
   return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
 }
 
-passport.use(new LocalStrategy((username, password, next) => {
+passport.use('local-login', new LocalStrategy((username, password, next) => {
   username = capitalize(username)
   User.findOne({ 'username' : username}, (err, foundUser) => {
     if (err) {
@@ -17,12 +17,12 @@ passport.use(new LocalStrategy((username, password, next) => {
     }
 
     if (!foundUser) {
-      next(null, false, { message: 'Incorrect username' });
+      next(null, false, { message: 'I would tell you whether your username or password is wrong, but security first!' });
       return;
     }
 
     if (!bcrypt.compareSync(password, foundUser.password)) {
-      next(null, false, { message: 'Incorrect password' });
+      next(null, false, { message: 'I would tell you whether your username or password is wrong, but security first!' });
       return;
     }
 
