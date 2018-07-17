@@ -130,5 +130,7 @@ function addGroupMember(groupId){
   })
   .then(response => {
     window.location.reload();
+    // console.log(response);
   });
+
 }

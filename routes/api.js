@@ -98,6 +98,7 @@ router.post('/events/pictures/comment/edit/:picId/:commentId', (req, res, next) 
         // Saves event after editing comment
         event.save()
             .then(event => {
+                // res.render('groups/index');
                 res.send(event);
             })
             .catch(err => {

@@ -84,7 +84,7 @@ passport.use('local-signup', new LocalStrategy(
           console.log('Username before capitalize:', req.body.username);
           let username = capitalize(req.body.username);
           console.log('Username after capitalize: ', username);
-          if (req.file) profilePic = req.file.url;
+          if (req.file) profilePic = req.file.secure_url;
           const hashPass = bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
           const newUser = new User({
             name: {

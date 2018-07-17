@@ -15,14 +15,14 @@ function capitalize(val) {
 // Function to check that user is admin for permission to edit event
 function checkUser(id, role){
     return (req, res, next)=>{
-        Group.findById(req.params[id])
+        Group.findById(req.params[id]).populate('events', 'guests')
             .then(group => {
                 if (group[role].indexOf(req.session.passport.user) !== -1){
                     // This adds the group to the request so I don't have to find
                     // it anymore and I can access it from handlebars
                     req.group = group;
                     return next();
-                } else {
+                }
                     res.redirect('/auth/login');
                 }
             });
@@ -144,7 +144,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     }
 
     find.then(user => {
-        // Adds members that user
+        // Adds to members added user(s)
         if(usersArray.length > 0) newGroup.members.push(...usersArray)
 
         newGroup.save()
@@ -163,7 +163,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
 });
 
 // Route to show particular group info
-router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
+router.get('/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'members'), (req, res, next) => {
     Group.findById(req.params.id).populate('members', 'name username').populate('events', 'name')
         .then(group => {
             if (group.admin.indexOf(req.session.passport.user) !== -1){
@@ -502,6 +502,7 @@ router.get('/events/remove/:groupId/:eventId', ensureLoggedIn('/auth/login'), ch
                     const index = req.group.events.indexOf(event._id);
                     // Removes event ID from group's events array
                     req.group.events.splice(index, 1);
+                    // Saves group after deleting event from its events array
                     req.group.save()
                         .then(group => {
                             res.redirect(`/groups/${group._id}`);

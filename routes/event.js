@@ -11,6 +11,39 @@ function capitalize(val) {
     return val.charAt(0).toUpperCase() + val.substring(1).toLowerCase();
 }
 
+// Function to check user's permission to view event
+function checkUser(id) {
+    return (req, res, next) => {
+        Event.findById(req.params.id).populate('pictures.creatorId', 'name username').populate('pictures.comments.creatorId', 'name username').populate('groupId', 'members')
+            .then(event => {
+                if (event.guests.indexOf(req.session.passport.user) !== -1){
+                    req.event = event;
+                    return next();
+                } else if(event.creatorId == req.session.passport.user){
+                    // This is what I use on handlebars to check if user is admin
+                    event.yes = true;
+                    req.event = event;
+                    return next();
+                } else if(event.groupId){
+                    if (event.groupId.members.indexOf(req.session.passport.user) !== -1){
+                        req.event = event;
+                        return next();
+                    } else {
+                        console.log('Not part of groupid')
+                        res.redirect('/auth/login');
+                    }
+                } else {
+                    console.log('redirect')
+                    res.redirect('/auth/login');
+                }
+            })
+            .catch(err => {
+                console.log("Error in finding event when checking if user has permission to view event: ", err);
+                next();
+            });
+    }
+}
+
 // Route to display all events a user is a guest of
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Finds events that the user created or that they're a guest of
@@ -32,22 +65,13 @@ router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
 });
 
 // Route to display a particular event
-router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
-    // Finds event to display and populates the creators of its pictures  and the creator
-    // of the comments within the pictures with their name and username
-    Event.findById(req.params.id).populate('pictures.creatorId', 'name username').populate('pictures.comments.creatorId', 'name username')
-        .then(event => {
-            // Sets e.yes to true when user is admin of event 
-            // This is to show edit and delete buttons
-            if(event.creatorId == req.session.passport.user){
-                    event.yes = true;
-            }
-            res.render('events/show', {event});
-        })
-        .catch(err => {
-            console.log('Error in getting particular event: wassup: ', err);
-            next();
-        });
+router.get('/:id', ensureLoggedIn('/auth/login'), checkUser('id'), (req, res, next) => {
+    let event = req.event;
+    // This is to show edit and delete buttons
+        if(event.creatorId == req.session.passport.user){
+                event.yes = true;
+        }
+        res.render('events/show', {event});
 });
 
 // Route to display page to create an event
