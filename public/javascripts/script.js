@@ -89,6 +89,12 @@ function showList(button1, button2, listItems){
   }
 }
 
+// const commentApiUrl = process.env.DOMAIN + 'api/events/pictures/comment';
+
+// function console(){
+//   console.log(req)
+// }
+
 const commentApi = axios.create({
   baseURL: 'http://localhost:3000/api/events/pictures/comment'
 });
@@ -123,14 +129,21 @@ const groupApi = axios.create({
   baseURL: 'http://localhost:3000/groups'
 });
 
+function usersToArray(){
+  this.usersArray = [];
+  let users = document.getElementsByName('users');
+  for (i=0; i<users.length; i++){
+    usersArray.push(users[i].value)
+  }
+}
 
 function addGroupMember(groupId){
+  usersToArray();
   groupApi.post('/members/add/' + groupId, {
-    users: document.getElementsByClassName('users')
+    users: usersArray
   })
   .then(response => {
     window.location.reload();
-    // console.log(response);
   });
 
 }

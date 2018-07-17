@@ -22,7 +22,7 @@ function checkUser(id, role){
                     // it anymore and I can access it from handlebars
                     req.group = group;
                     return next();
-                }
+                } else {
                     res.redirect('/auth/login');
                 }
             });
@@ -417,24 +417,6 @@ router.post('/members/add/:groupId', ensureLoggedIn('/auth/login'), checkUser('g
     // Var to hold promise statement if users are added to group.
     let find = new Promise((resolve, reject) => {resolve();});
 
-    // If single user is added as member
-    if (typeof(users) === 'string') {
-        users = capitalize(users);
-        // Changes var find to this promise statement in case single user is added
-        find = User.findOne({username: users}, {_id:1, groups:1})
-            .then(user => {
-                user.groups.push(req.group._id);
-                usersArray.push(user._id);
-                user.save()
-                    .catch(err => {
-                        console.log('Error in saving user after creating a group and adding them as a member as the group and then adding group ID to their groups array: ', err);
-                    });
-            })
-            .catch(err => {
-                console.log('Error finding single user to add to members array of group newly created: ', err);
-            });
-    }
-
     // If more than one user is added to group
     if (typeof(users) === 'object') {
         users.forEach(e => {
@@ -453,10 +435,10 @@ router.post('/members/add/:groupId', ensureLoggedIn('/auth/login'), checkUser('g
         find = User.find(userFind, {_id: 1, groups:1})
             .then(user => {
                 user.forEach(e => {
-                    user.groups.push(req.group._id);
-                    user.save()
+                    e.groups.push(req.group._id);
+                    e.save()
                         .then(user => {
-                            usersArray.push(e._id);
+                            usersArray.push(user._id);
                         })
                         .catch(err => {
                             console.log('Error in saving multiple users after adding group they were just added to to their groups array. This is in the creation of the group: ', err);
@@ -475,7 +457,8 @@ router.post('/members/add/:groupId', ensureLoggedIn('/auth/login'), checkUser('g
         req.group.members.push(...usersArray);
         req.group.save()
             .then(group => {
-                res.redirect(`/groups/${group._id}`)
+                res.send(group);
+                // res.redirect(`/groups/${group._id}`)
             })
             .catch(err => {
                 console.log('Error in saving group after ONLY adding a member to it: ', err);
@@ -485,7 +468,7 @@ router.post('/members/add/:groupId', ensureLoggedIn('/auth/login'), checkUser('g
     .catch(err => {
         console.log('Error in finding users to add to group when ONLY adding members to group: ', err);
         next();
-    })
+    });
 
 });
 

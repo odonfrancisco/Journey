@@ -12,7 +12,7 @@ Members:
         <input id="edit-members-button" type="button" value="Edit" onclick="showList('edit-members-button', 'done-members-button', 'member-edit')">
         <input id="add-members-button" type="button" value="Add Members" onclick="showForm('add-members-button', 'add-members-form', 'edit-members-button')">
         <input id="done-members-button" type="button" value="Done" style="display:none" onclick="showList('done-members-button', 'edit-members-button', 'member-edit')">
-        <form id="add-members-form" action="/groups/members/add/{{group._id}}" method="post" style="display:none">
+        <form id="add-members-form" {{!-- action="/groups/members/add/{{group._id}}" --}} onsubmit="addGroupMember('{{group._id}}')" {{!-- method="post" --}} style="display:none">
             <div id="usersField">
             </div>
             <div class="dropdown">
@@ -51,3 +51,6 @@ Events:
         {{/if}}
     {{/each}}
 </ul>
+
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
