@@ -79,7 +79,7 @@ const eventSchema = Schema({
     },
     // Array of pictures tied to event
     pictures: [pictureSchema],
-    // Array of guest id's apart from family
+    // Array of guest id's apart from group
     guests: [{ type: Schema.Types.ObjectId, ref: 'User'}],
     // A banner for the event page
     eventPic: {

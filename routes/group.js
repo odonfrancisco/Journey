@@ -73,10 +73,11 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     // Adds user who created group to admin array
     newGroup.admin.push(req.session.passport.user);
 
-    // Makes the customizable familyId the id of the group
+    // Makes the customizable groupId the id of the group
     // to satisfy its requirement on the backend to be unique
     const id = newGroup._id.toString();
     newGroup.groupId = id;
+    newGroup.familyId = 'Helllo'
 
     // Var for arrray of search queries for the Id of each user
     let allUsers = [];
@@ -85,7 +86,18 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     let usersArray = [];    
 
     // Var to hold promise statement if users are added to event.
-    let find = new Promise((resolve, reject) => {resolve();});
+    let find = User.findById(req.session.passport.user)
+        .then(user => {
+            user.groups.push(newGroup._id);
+            usersArray.push(user._id);
+            user.save()
+                .catch(err => {
+                    console.log('Error in saving user who created group without adding any members: ', err);
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding user in creating a group: ', err);
+        });
 
     // If single user is added to event
     if (typeof(users) === 'string') {
@@ -505,5 +517,17 @@ router.get('/events/remove/:groupId/:eventId', ensureLoggedIn('/auth/login'), ch
             next();
         });
 });
+
+// Route to delete a group :(
+router.get('/delete/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin'), (req, res, next) => {
+    let group = req.group.populate('members', 'groups');
+    Event.find({'_id': {$in: group.events}})
+        .then(events => {
+            console.log('Events found: ', events)
+            // events.groupId = null;
+        })
+    // req.group.remove();
+    res.redirect('/groups');
+})
 
 module.exports = router;
