@@ -67,6 +67,10 @@ router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
 // Route to display a particular event
 router.get('/:id', ensureLoggedIn('/auth/login'), checkUser('id'), (req, res, next) => {
     let event = req.event;
+
+    if(event == undefined){
+        return next();
+    }
     // This is to show edit and delete buttons
         if(event.creatorId == req.session.passport.user){
                 event.yes = true;
@@ -450,6 +454,24 @@ router.get('/pictures/comment/delete/:picId/:commentId', ensureLoggedIn('/auth/l
         })
         .catch(err => {
             console.log('Error in finding event using pictures id:' ,err);
+            next();
+        });
+});
+
+// Route to use with axios to join an event using the eventId
+router.post('/join', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    const eventId = req.body.eventId.toLowerCase();
+    Event.findOne({eventId: eventId})
+        .then(event => {
+            event.guests.push(req.session.passport.user);
+            event.save()
+                .catch(err => {
+                    console.log('Error in saving event after user attempted to join using eventId: ', err);
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding event using custom eventId when user tried to join: ', err);
             next();
         });
 });

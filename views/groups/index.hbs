@@ -1,4 +1,9 @@
 <a href="/groups/create"><input type="button" value="Create Group"></a>
+<input id="join-group" type="button" value="Join Group" onclick="showForm('join-group', 'join-group-form')">
+<form id="join-group-form" onsubmit="joinGroup()" style="display:none">
+    <input type="text" id="groupId" placeholder="Supremely Secret Group ID">
+    <input type="submit" value="Join Group!">
+</form>
 
 {{#each groups}}
     <div>

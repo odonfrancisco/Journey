@@ -77,7 +77,10 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     // to satisfy its requirement on the backend to be unique
     const id = newGroup._id.toString();
     newGroup.groupId = id;
-    newGroup.familyId = 'Helllo'
+    // FamilyId is giving me errors, mongoose thinks it's required so I'm putting
+    // it here to satisfy that temporarily but it's an issue I need to get to the root of
+    newGroup.familyId = id;
+    // console.log(newGroup.familyId)
 
     // Var for arrray of search queries for the Id of each user
     let allUsers = [];
@@ -145,7 +148,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
                         .catch(err => {
                             console.log('Error in saving multiple users after adding group they were just added to to their groups array. This is in the creation of the group: ', err);
                             next();
-                        })
+                        });
                     usersArray.push(e._id);
                 });
                 // console.log('This is the user found using userfind: ', user);
@@ -521,13 +524,81 @@ router.get('/events/remove/:groupId/:eventId', ensureLoggedIn('/auth/login'), ch
 // Route to delete a group :(
 router.get('/delete/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin'), (req, res, next) => {
     let group = req.group.populate('members', 'groups');
-    Event.find({'_id': {$in: group.events}})
-        .then(events => {
-            console.log('Events found: ', events)
-            // events.groupId = null;
-        })
-    // req.group.remove();
+    Group.findById(req.params.id).populate('members', 'groups').populate('events', 'groupId')
+        .then(group => {
+            group.events.forEach(e => {
+                e.groupId = null;
+                e.save()
+                    .catch(err => {
+                        console.log('Error in saving event after deleting its group Id after deleting a particular group: ', err);
+                        next();
+                    });
+            });
+            group.members.forEach(e => {
+                let index = e.groups.indexOf(req.params.id);
+                e.groups.splice(index, 1);
+                e.save()
+                    .catch(err => {
+                        console.log('Error in saving member after deleting groupId from its groups array after deleting a group; ', err);
+                        next();
+                    });
+            });
+            group.remove()
+                .catch(err => {
+                    console.log('Error in deleting group:', err);
+                    next();
+                })
+            Group.update()
+                .catch(err => {
+                    console.log('Error in updating group schema after deleting a group: ',err);
+                });
+        });
     res.redirect('/groups');
-})
+});
+
+// Axios post route for User to join a group using the groupId 
+router.post('/join', ensureLoggedIn('/auth/login'), (req, res, next) => {
+    console.log(req.body.groupId);
+    // GroupId passed through req.body in axios and makes it lowercase
+    const groupId = req.body.groupId.toLowerCase();
+    const user = req.session.passport.user;
+    // Finds the group whose groupId it is
+    Group.findOne({groupId: groupId}, {members:1})
+        .then(group => {
+            // Checks that user isn't already a member of the group
+            if (group.members.indexOf(user) !== -1){
+                // This means user is already a member of this group, no need to add
+                console.log('User already in group: ', 
+                    'group.members: ', group.members,
+                    'user: ', user);
+                // Still need to work on what to do with error messages
+                return next();
+            // If user doesn't belong in group, adds user to group.guests, saves group 
+                // and then adds the group's actual ID to user's groups
+            } else if(group.members.indexOf(user) == -1){
+                group.members.push(user);
+                group.save()
+                    .then(group => {
+                        req.user.groups.push(group._id);
+                        req.user.save()
+                            .then(user => {
+                                res.send(user);
+                            })
+                            .catch(err => {
+                                console.log('Error in saving User after pushing groupId to its groups after joining using axios groupId:' , err);
+                                next();
+                            });
+                    })
+                    .catch(err => {
+                        console.log('Error in saving group after User joined using axios')
+                        next();
+                    });
+            }
+        })
+        .catch(err => {
+            console.log('Error in finding group for User to join using groupId and axios: ', err);
+            next();
+        });
+});
 
 module.exports = router;

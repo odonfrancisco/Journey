@@ -95,12 +95,15 @@ function showList(button1, button2, listItems){
 //   console.log(req)
 // }
 
+// Axios set up for comments CRUD
 const commentApi = axios.create({
   baseURL: 'http://localhost:3000/api/events/pictures/comment'
 });
 
 function addComment(id){
+  // Axios Post request to add comment
   commentApi.post(id, {
+    // Value of the input user comments
     commentContent: document.getElementById(`${id}-addComment`).value
   })
   .then(response => {
@@ -110,6 +113,7 @@ function addComment(id){
 }
 
 function deleteComment(picId, commentId){
+  // Axios post request to delete comment
   commentApi.post('/delete/' + picId + '/' + commentId)
     .then(response => {
       window.location.reload();
@@ -117,7 +121,9 @@ function deleteComment(picId, commentId){
 }
 
 function editComment(picId, commentId){
+  // Axios post request to edit comment
   commentApi.post('/edit/' + picId + '/' + commentId, {
+    // Content with what user update
     commentContent: document.getElementById(`${commentId}-editComment`).value
   })
     .then(response => {
@@ -125,21 +131,30 @@ function editComment(picId, commentId){
     });
 }
 
+// Axios set up to manipulate groups using axios
 const groupApi = axios.create({
   baseURL: 'http://localhost:3000/groups'
 });
 
+// This function gets the value of all the members added to group
 function usersToArray(){
+  // Array to store username of each user added
   this.usersArray = [];
+  // Captures all usernames 
   let users = document.getElementsByName('users');
+  // Goes through all the usernames and adds each one to the usersArray
   for (i=0; i<users.length; i++){
     usersArray.push(users[i].value)
   }
 }
 
+// This function uses axios to add a group member
 function addGroupMember(groupId){
+  // Calls previous function to receive array with all usernames
   usersToArray();
+  // Axios post request to add a member
   groupApi.post('/members/add/' + groupId, {
+    // sends the array of users in the req.body
     users: usersArray
   })
   .then(response => {
@@ -147,3 +162,29 @@ function addGroupMember(groupId){
   });
 
 }
+
+function joinGroup(){
+  groupApi.post('/join', {
+    groupId: document.getElementById('groupId').value
+  })
+  .then(res => {
+    window.location.reload();
+  })
+}
+
+// Axios setup for events
+const eventApi = axios.create({
+  baseURL: 'http://localhost:3000/events'
+});
+
+function joinEvent(){
+  // Axios post request to have user join an event
+  eventApi.post('/join', {
+    // Passes the eventId in the req.body
+    eventId: document.getElementById('eventId').value
+  })
+    .then(res => {
+      window.location.reload();
+    });
+}
+

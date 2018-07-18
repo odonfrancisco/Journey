@@ -1,5 +1,9 @@
 <a href="/events/create"><input type="button" value="Create Event"></a>
-
+<input id="join-event" type="button" value="Join Event" onclick="showForm('join-event', 'join-event-form')">
+<form id="join-event-form" onsubmit="joinEvent()" style="display:none">
+    <input id="eventId" type="text" name="eventId" placeholder="Super Secret Event ID">
+    <input type="submit" value="Join Event">
+</form>
 
 {{#each event}}
 <div>
