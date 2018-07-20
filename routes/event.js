@@ -481,4 +481,27 @@ router.post('/join', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
+// Route to be used with axios to remove a user from an event it was invited to
+router.post('/remove/:userId/:eventId', (req, res, next) => {
+    Event.findById(req.params.eventId, {guests:1})
+        .then(event => {
+            // Gets index of user within event's guests
+            let index = event.guests.indexOf(req.params.userId);
+            // Removes user from guests array of event
+            event.guests.splice(index, 1);
+            // Saves event once user is removed from guests array
+            event.save()
+                .then(event => {
+                    res.send(event);
+                })
+                .catch(err => {
+                    console.log('Error in saving event after removing a user from its guests: ', err );
+                    next();
+                });
+        })
+        .catch(err => {
+            console.log('Error in finding event to remove a user from')
+        });
+});
+
 module.exports = router;

@@ -109,3 +109,19 @@ Phone: {{user.phone}}<br>
         {{/each}}
     </ul>
 {{/if}}
+
+<br><br>
+
+{{#if user.yes}}
+    {{#if events}}
+    Invited Events
+        <input id="edit-invited-button" type="button" value="Edit" onclick="showList('edit-invited-button', 'done-invited-button', 'remove-event')">
+        <input id="done-invited-button" type="button" value="Done" style="display:none" onclick="showList('done-invited-button', 'edit-invited-button', 'remove-event')">
+    <ul>
+        {{#each events}}
+            <li><a href="/events/{{this._id}}">{{this.name}}</a></li>
+                <input type="button" value="Remove Yourself" style="display:none" class="remove-event" onclick="removeInvitedUser('{{../req.session.passport.user}}', '{{this._id}}')">
+        {{/each}}
+    </ul>
+    {{/if}}
+{{/if}}

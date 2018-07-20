@@ -30,11 +30,26 @@ router.get('/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
     User.findById(req.params.id).populate('events', 'name').populate('groups', 'name').populate('friends', 'name username')
         .then(user => {
             // Checks if user is viewing their own page. If they are, 
-            // allows edit and delete button on their page
+                // allows edit and delete button on their page
             if (user._id == req.session.passport.user){
                 user.yes = true;    
             }
-            res.render('users/show', {user});
+            // Checks that user is a friend of profile being viewed
+            if (user.friends.indexOf(req.session.passport.user) >= 0 || user._id == req.session.passport.user){
+                            // Finds all events a user is a guest of
+                Event.find({guests: {$in: [user._id]}}, {guests:1, name:1})
+                    .then(events => {
+                      res.render('users/show', {user, events});  
+                    })
+                    .catch(err => {
+                        console.log('Error in finding events user is a guest of: ', err);
+                        next();
+                    });
+            // Else redirects to active user's profile page
+            } else {
+                // NEED TO WORK ON ERROR MESSAGE APPEARING
+                res.redirect(`/users/${req.session.passport.user}`);
+            }
         })
         .catch(err => {
             console.log('Error in finding particular user on userRoutes, check yoself: ', err);
@@ -91,7 +106,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkEditUser(), uploadC
     //     return next(null, false, {message: 'Invalid Email'});
     //   }
 
-    // Checks that password isn't already in use
+    // Checks that email isn't already in use
     if (emailRepeat(req.body.email) === true){
         return next(null, false, {message: 'This Email is already in use'});
     }
@@ -125,6 +140,10 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkEditUser(), uploadC
             if (password1 && password2){
                 const hashPass = bcrypt.hashSync(password1, bcrypt.genSaltSync(10), null);
                 user.password = hashPass;
+            }
+
+            if(req.file){
+                user.profilePic = req.file.secure_url;
             }
 
             // Saves user and their edited info
@@ -209,7 +228,7 @@ router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (
                 usersArray.push({
                     '_id': user._id 
                 });
-                console.log('usersArray from one added friend: ', usersArray);
+                // console.log('usersArray from one added friend: ', usersArray);
             })
             .catch(err => {
                 console.log('Error finding single user: ', err);
@@ -292,5 +311,7 @@ router.get('/friends/delete/:id/:friendId', checkEditUser(), (req, res, next) =>
             next();
         });
 });
+
+
 
 module.exports = router;

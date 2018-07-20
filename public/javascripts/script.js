@@ -203,3 +203,9 @@ function addPic(eventId){
     });
 }
 
+function removeInvitedUser(userId, eventId){
+  eventApi.post('/remove/' + userId + '/' + eventId)
+    .then(req => {
+      window.location.reload();
+    })
+}
