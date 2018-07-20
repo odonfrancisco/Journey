@@ -32,7 +32,7 @@ Members:
         <li><a href="/users/{{this._id}}">
         {{this.name.first}} {{this.name.last}}</a></li>
         {{#if ../group.yes}}
-            <a style="display:none" class="member-edit" href="/groups/members/delete/{{../group._id}}/{{this._id}}"><input type="button" value="Remove"></a>
+            <a style="display:none" class="member-edit" href="/groups/remove-member/{{../group._id}}/{{this._id}}"><input type="button" value="Remove"></a>
         {{/if}}
     {{/each}}
 </ul>

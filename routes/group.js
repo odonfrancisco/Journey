@@ -613,21 +613,25 @@ router.get("/remove-member/:groupId/:userId", ensureLoggedIn('/auth/login'), che
         // Removes memberId from group members
         req.group.members.splice(index, 1);
         // Index of member in admin 
-        const adminIndex = req.group.admin.indexOf(req.session.passport.user);
+        const adminIndex = req.group.admin.indexOf(req.params.userId);
+        console.log('adminIndex :', adminIndex);
         // Removes member from admin if admin
-        if (adminIndex !== -1){
+        if (adminIndex >= 0){
+            console.log('req.group.admin before: ', req.group.admin);
             req.group.admin.splice(adminIndex, 1);
+            console.log('req.group.admin after deleting: ', req.group.admin);
             if(req.group.admin.length == 0){
                 // This makes a random member of the group admin
                     // Length of members array for group
                     let memLength = req.group.members.length;
+                    console.log('memLength: ', memLength);
                     // Random number from length 
                     let memNum = Math.floor(Math.random()*memLength);
+                    console.log('memNum: ', memNum);
                     // Adds random member to admin array if no more admin left
                     req.group.admin.push(req.group.members[memNum]);
             }
         }
-        // Picks random member from group to be admin if there are 0 admin
         // Saves group after removing a member
         req.group.save()
             .then(group => {
