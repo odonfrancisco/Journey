@@ -79,7 +79,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     newGroup.groupId = id;
     // FamilyId is giving me errors, mongoose thinks it's required so I'm putting
     // it here to satisfy that temporarily but it's an issue I need to get to the root of
-    newGroup.familyId = id;
+    // newGroup.familyId = id;
     // console.log(newGroup.familyId)
 
     // Var for arrray of search queries for the Id of each user
@@ -253,11 +253,11 @@ router.post('/events/create/:id', ensureLoggedIn('/auth/login'), checkUser('id',
             req.group.save()
                 .then(group => {
                 res.redirect(`/groups/${group._id}`);
-            })
-            .catch(err => {
-                console.log('Error in saving group after creating a new event for the group: ', err);
-                next();
-            });
+                })
+                .catch(err => {
+                    console.log('Error in saving group after creating a new event for the group: ', err);
+                    next();
+                });
         })
         .catch(err => {
             console.log('Error in saving event after creating it for a group:', err);
@@ -600,5 +600,66 @@ router.post('/join', ensureLoggedIn('/auth/login'), (req, res, next) => {
             next();
         });
 });
+
+// Route to remove specific member from group
+router.get("/remove-member/:groupId/:userId", ensureLoggedIn('/auth/login'), checkUser('groupId', 'members'), (req, res, next) => {
+    // Gets index of user in group members array
+    const index = req.group.members.indexOf(req.params.userId)
+    // This is to check if user is admin if they're removing someone other than themselves
+    if(req.params.userId !== req.session.passport.user){
+        checkUser('groupId', 'admin');
+    } 
+    if(index >= 0) {
+        // Removes memberId from group members
+        req.group.members.splice(index, 1);
+        // Index of member in admin 
+        const adminIndex = req.group.admin.indexOf(req.session.passport.user);
+        // Removes member from admin if admin
+        if (adminIndex !== -1){
+            req.group.admin.splice(adminIndex, 1);
+            if(req.group.admin.length == 0){
+                // This makes a random member of the group admin
+                    // Length of members array for group
+                    let memLength = req.group.members.length;
+                    // Random number from length 
+                    let memNum = Math.floor(Math.random()*memLength);
+                    // Adds random member to admin array if no more admin left
+                    req.group.admin.push(req.group.members[memNum]);
+            }
+        }
+        // Picks random member from group to be admin if there are 0 admin
+        // Saves group after removing a member
+        req.group.save()
+            .then(group => {
+                // Index of group in user's groups
+                const index = req.user.groups.indexOf(req.group._id);
+                // Removes groupId from user's group Array
+                req.user.groups.splice(index, 1);
+                req.user.save()
+                    .then(user => {
+                        if(req.params.userId !== req.session.passport.user){
+                            res.redirect(`/groups/${req.group._id}`);
+                        } else {
+                            res.redirect(`/users/${user._id}`)
+                        }
+                    })
+                    .catch(err => {
+                        console.log('Error in saving user after removing ', err)
+                    })
+            })
+            .catch(err => {
+                console.log('Error in ')
+            })
+        
+        
+    } else {
+        console.log('IndexOf: ', req.group.members.indexOf(req.params.userId))
+        console.log('User is not a member of group: ', 
+            req.group.members + 
+            'User Id: ' + req.params.userId);
+        next();
+    }
+    // res.render(`/users/${req.params.userId}`)
+})
 
 module.exports = router;

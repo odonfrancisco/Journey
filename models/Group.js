@@ -38,11 +38,7 @@ const groupSchema = Schema({
     memberAttributes: [{
         memberId: { type: Schema.Types.ObjectId, ref: 'User'},
         attr: Schema.Types.Mixed
-    }],
-    familyId: {
-        type: String,
-        unique: false
-    }
+    }]
 });
 
 const Group = mongoose.model('Group', groupSchema);

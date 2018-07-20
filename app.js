@@ -74,6 +74,8 @@ app.use(flash());
 require('./passport')(app);
 
 app.use((req, res, next) => {
+  // Adds user domain to be accessed from hbs to be used with axios on heroku 
+  req.userDomain = process.env.DOMAIN;
   // Allows request to be accessed from handlebars
   app.locals.req = req;
   // console.log(req.url)

@@ -303,6 +303,11 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
+// router.post('/pictur', uploadCloud.array('pictures'), (req, res, next) => {
+//     console.log(req.files);
+//     res.send('ue');
+// })
+
 // Route to add pictures to event
 router.post('/pictures/add/:id', uploadCloud.array('pictures'), (req, res, next) => {
     // Arr to hold each pictureObj

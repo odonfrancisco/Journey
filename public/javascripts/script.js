@@ -95,14 +95,16 @@ function showList(button1, button2, listItems){
 //   console.log(req)
 // }
 
+const domainUrl = document.getElementById('domainName').innerText;
+
 // Axios set up for comments CRUD
 const commentApi = axios.create({
-  baseURL: 'http://localhost:3000/api/events/pictures/comment'
+  baseURL: domainUrl + 'api/events/pictures/comment'
 });
 
 function addComment(id){
   // Axios Post request to add comment
-  commentApi.post(id, {
+  commentApi.post('/' + id, {
     // Value of the input user comments
     commentContent: document.getElementById(`${id}-addComment`).value
   })
@@ -131,9 +133,10 @@ function editComment(picId, commentId){
     });
 }
 
+
 // Axios set up to manipulate groups using axios
 const groupApi = axios.create({
-  baseURL: 'http://localhost:3000/groups'
+  baseURL: domainUrl + 'groups'
 });
 
 // This function gets the value of all the members added to group
@@ -174,7 +177,7 @@ function joinGroup(){
 
 // Axios setup for events
 const eventApi = axios.create({
-  baseURL: 'http://localhost:3000/events'
+  baseURL: domainUrl + 'events'
 });
 
 function joinEvent(){
@@ -183,6 +186,18 @@ function joinEvent(){
     // Passes the eventId in the req.body
     eventId: document.getElementById('eventId').value
   })
+    .then(res => {
+      window.location.reload();
+    });
+}
+
+function addPic(eventId){
+  let formData = new FormData();
+  let pictures = document.getElementsByName('pictures')[0];
+  formData.append('image', pictures.files[0]);
+  // Axios post request to add picture to an event
+  eventApi.post('pictur', formData, { headers: {'Content-type':'multipart/form-data' }})
+  // eventApi.post('/pictures/add/' + eventId)
     .then(res => {
       window.location.reload();
     });
