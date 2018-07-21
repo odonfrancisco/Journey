@@ -5,10 +5,12 @@
     {{else}}
     {{!-- <a href="/events/edit/pictures/{{event._id}}"> --}}<button id="addPicture" onclick="showForm('addPicture', 'picturesForm')">Add Pictures</button>{{!-- </a> --}}
 {{/if}}
-<form id="picturesForm" style="display:none" action="/events/pictures/add/{{event._id}}" {{!-- action="/events/pictur" --}} {{!-- onsubmit="addPic()" --}} method="post" enctype="multipart/form-data">
+{{!-- <form id="picturesForm" style="display:none" action="/events/pictures/add/{{event._id}}" action="/events/pictur" onsubmit="addPic()" method="post" enctype="multipart/form-data"> --}}
+<div id="picturesForm" style="display:none">
     <input type="file" multiple name="pictures">
-    <input type="submit" value="Add Pictures">
-</form>
+    <input type="button" onclick="addPic('{{event._id}}')" value="Add Pictures">
+</div>
+{{!-- </form> --}}
 {{event.name}}<br>
 {{event.description}}<br>
 {{#if event.address.zip}}
@@ -31,6 +33,7 @@ End {{#with event.end}}
     Time: {{time}}
 {{/with}}
 <br>
+
 
 <div class="event-pics-container">
     {{#each event.pictures}}
@@ -74,7 +77,7 @@ End {{#with event.end}}
             <input type="text" name="picName" value="{{this.picName}}">
             <input type="text" name="description" placeholder="Description" value="{{this.description}}">
             <input type="submit" value="Edit Picture">
-            <a href="/events/pictures/delete/{{this._id}}"><input type="button" value="Delete Picture"></a>
+            {{!-- <a href="/events/pictures/delete/{{this._id}}"> --}}<input type="button" onclick="removePic('{{this._id}}')" value="Delete Picture">{{!-- </a> --}}
         </form>
         {{/if}}
         <input type="button" id="{{this._id}}comment" value="Add Comment!" onclick="showForm('{{this._id}}comment', '{{this._id}}comment-form')">
@@ -85,4 +88,6 @@ End {{#with event.end}}
     </div>
     {{/each}}
 </div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw4DnnwzE3bgts7cc5LSq3b1OX6cT_eis"></script>
 

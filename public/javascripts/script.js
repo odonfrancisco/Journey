@@ -194,10 +194,22 @@ function joinEvent(){
 function addPic(eventId){
   let formData = new FormData();
   let pictures = document.getElementsByName('pictures')[0];
-  formData.append('image', pictures.files[0]);
+  for (i=0; i<pictures.files.length; i++){
+    formData.append('image', pictures.files[i]);
+  }
+  // formData.append('image', pictures.files[1]);
   // Axios post request to add picture to an event
-  eventApi.post('pictur', formData, { headers: {'Content-type':'multipart/form-data' }})
-  // eventApi.post('/pictures/add/' + eventId)
+  eventApi.post('pictures/add/' + eventId, formData, { headers: {'Content-type':'multipart/form-data' }})
+    .then(res => {
+      window.location.reload();
+      window.scrollTo(0, document.body.scrollHeight);
+      // window.setTimeout(function(){window.scrollTo(0, document.body.scrollHeight)}, 5000);
+    });
+
+}
+
+function removePic(picId){
+  eventApi.get('pictures/delete/' + picId)
     .then(res => {
       window.location.reload();
     });

@@ -3,7 +3,7 @@
 {{#if req.group}}
     <form method="post" action="/groups/events/create/{{req.group._id}}" enctype="multipart/form-data">
     {{else}}
-    <form method="post" action="/events/create" enctype="multipart/form-data">
+    <form method="post" action="/events/create" onsubmit="setTimeout(()=>{},5000)" enctype="multipart/form-data">
 {{/if}}
     <input type="text" name="name" placeholder="Event Name" required>
 
@@ -85,6 +85,15 @@
 
     <input type="number" name="zip" placeholder="Zip">
 
-    <input type="submit" value="Create Event">
+    <input type="submit" {{!-- id="submit" --}} value="Create Event">
+
+    <input type="text" name="latitude" id="latitude" style="display:none">
+    <input type="text" name="longitude" id="longitude" style="display:none">
 
 </form>
+
+<div id="map"></div>
+<input type="button" id="submit">
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw4DnnwzE3bgts7cc5LSq3b1OX6cT_eis"></script>
+<script src='/javascripts/maps.js'></script>

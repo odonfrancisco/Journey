@@ -86,6 +86,10 @@ const eventSchema = Schema({
         type: String,
         default: 'http://decalpitstop.com/wallpaper/1280x800/pink%20drip.jpg'
     },
+    location: {
+        type: {type: String},
+        coordinates: [Number]
+    },
     address: {
         street: String,
         apt: String,
@@ -99,6 +103,8 @@ const eventSchema = Schema({
         updatedAt: 'updatedAt'
     }
 });
+
+eventSchema.index({locations: '2dsphere'});
 
 const Event = mongoose.model('Event', eventSchema);
 module.exports = Event;

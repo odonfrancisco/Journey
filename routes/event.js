@@ -85,6 +85,7 @@ router.get('/create', ensureLoggedIn('/auth/login'), (req, res, next) => {
 
 // Post route to create event 
 router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventPic'), (req, res, next) => {
+    console.log(req.body.latitude)
     // Destructure req.body
     const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
     // Create address object
@@ -303,13 +304,13 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
-// router.post('/pictur', uploadCloud.array('pictures'), (req, res, next) => {
-//     console.log(req.files);
-//     res.send('ue');
-// })
+router.post('/pictur', uploadCloud.array('image'), (req, res, next) => {
+    console.log(req.files);
+    res.send('ue');
+})
 
-// Route to add pictures to event
-router.post('/pictures/add/:id', uploadCloud.array('pictures'), (req, res, next) => {
+// Route to add pictures to event using axios
+router.post('/pictures/add/:id', uploadCloud.array('image'), (req, res, next) => {
     // Arr to hold each pictureObj
     let pictures = [];
     
@@ -334,7 +335,8 @@ router.post('/pictures/add/:id', uploadCloud.array('pictures'), (req, res, next)
             // Saves event after adding pictures
             event.save()
                 .then(event => {
-                    res.redirect(`/events/${event._id}`);
+                    res.send(event);
+                    // res.redirect(`/events/${event._id}`);
                 })
                 .catch(err => {
                     console.log('Issues saving event after adding ONLY pictures to it: ', err);
@@ -376,7 +378,7 @@ router.post('/pictures/edit/:eventId/:picId', ensureLoggedIn('/auth/login'), (re
         });
 });
 
-// Route to delete picture 
+// Route to delete picture using axios
 router.get('/pictures/delete/:picId', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Finds event to which picture belongs to using the picture id. So much better than
     // passing eventId as a URL param
@@ -390,7 +392,8 @@ router.get('/pictures/delete/:picId', ensureLoggedIn('/auth/login'), (req, res, 
             // Saves event after deleting its picture
             event.save()
                 .then(event => {
-                    res.redirect(`/events/${event._id}`);
+                    res.send(event);
+                    // res.redirect(`/events/${event._id}`);
                 })
                 .catch(err => {
                     console.log('Error in saving event: ', err);
@@ -492,6 +495,7 @@ router.post('/remove/:userId/:eventId', (req, res, next) => {
             // Saves event once user is removed from guests array
             event.save()
                 .then(event => {
+                    // Sends event to satisfy axios
                     res.send(event);
                 })
                 .catch(err => {
