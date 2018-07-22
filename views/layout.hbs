@@ -2,11 +2,14 @@
 <html>
   <head>
     <title>{{title}}</title>
+    <link rel="shortcut icon" href="https://res.cloudinary.com/odon/image/upload/v1530731353/folder-name/IMG-20180527-WA0007.jpg.jpg">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.bundle.min.js">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
-
-    <nav id="nav">
+  
+    <div {{!-- id="nav" --}} class="navbar-collapse">
       
       <text>{{#if req.user}}<a href="/users/{{req.user._id}}"><img class="profile-pic" src="{{req.user.profilePic}}">Welcome {{req.user.name.first}}</a>{{/if}}</text>
       
@@ -20,7 +23,7 @@
         <li><a href="/auth/login">Login!</a></li>
         {{/if}}
       </ul>
-    </nav>
+    </div>
 
     {{{body}}}
 

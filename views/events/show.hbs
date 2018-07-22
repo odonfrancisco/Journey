@@ -10,7 +10,6 @@
     <input type="file" multiple name="pictures">
     <input type="button" onclick="addPic('{{event._id}}')" value="Add Pictures">
 </div>
-{{!-- </form> --}}
 {{event.name}}<br>
 {{event.description}}<br>
 {{#if event.address.zip}}
@@ -33,6 +32,12 @@ End {{#with event.end}}
     Time: {{time}}
 {{/with}}
 <br>
+{{#if event.location.coordinates}}
+<input id="location" style="display:none" value="{{event.location.coordinates}}">
+
+<input type="button" value="Show Map" onclick="showMap()">
+<div id="event-map"></div>
+{{/if}}
 
 
 <div class="event-pics-container">
@@ -90,4 +95,4 @@ End {{#with event.end}}
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw4DnnwzE3bgts7cc5LSq3b1OX6cT_eis"></script>
-
+<script src="/javascripts/maps.js"></script>

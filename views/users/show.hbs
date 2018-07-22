@@ -9,7 +9,7 @@
     <fieldset id="usersField" {{!-- style="display:none" --}}>
     </fieldset>
     <div class="dropdown">
-        <input type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()">
+        <input autocomplete="off" type="text" multiple placeholder="Search.." id="userInput" onkeyup="filterFunction(), showMembersInput()">
         <input type="button" value="Add" onclick="addMember()">
         <div id="myDropdown" class="dropdown-content">
             {{#each data.user}}

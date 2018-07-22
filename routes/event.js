@@ -85,9 +85,8 @@ router.get('/create', ensureLoggedIn('/auth/login'), (req, res, next) => {
 
 // Post route to create event 
 router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventPic'), (req, res, next) => {
-    console.log(req.body.latitude)
     // Destructure req.body
-    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
+    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip, latitude, longitude} = req.body;
     // Create address object
     const address = {street, apt, city, state, zip};
     // Create start object
@@ -105,6 +104,13 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
     let eventPic;
     // Uploads event banner url only if it was uploaded
     if(req.file) {eventPic = req.file.secure_url;}
+    let location;
+    if(latitude && longitude){
+        location = {
+            type: 'Point',
+            coordinates: [latitude, longitude]
+        };
+    }
 
     // Creates new event using model constructor 
     let newEvent = new Event({
@@ -114,7 +120,8 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('eventP
         start,
         end,
         eventPic,
-        address
+        address,
+        location
     });
 
     // Adds event id to user's events array
@@ -173,7 +180,7 @@ router.get('/edit/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
 // Post route to edit event
 router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{name: 'pictures'}, {name: 'eventPic'}]), /* uploadCloud.array('pictures'), uploadCloud.single('eventPic'), */ (req, res, next) => {
     // Destructure req.body
-    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip, eventId} = req.body;
+    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip, eventId, latitude, longitude} = req.body;
     // Gets array of users that were added as guests from edit form
     let users = req.body.users;
     const address = {
@@ -202,6 +209,15 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{nam
            };
            pictures.push(pictureObj); 
         });
+    }
+
+    // Variable for the location of event IF submitted
+    let location;
+    if(latitude && longitude){
+        location = {
+            type: 'Point',
+            coordinates: [latitude, longitude]
+        };
     }
 
     // Variable which will hold the URL for event banner IF uploaded
@@ -273,6 +289,8 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{nam
             // If user uploads multiple pictures to event, sets it
             if (req.files.pictures) event.pictures.push(...pictures);
 
+            if (latitude && longitude) event.location = location;
+
             // Saves event after setting its pictures/users
             event.save()
                 .then(event => {
@@ -304,10 +322,10 @@ router.get('/delete/:id', ensureLoggedIn('/auth/login'), (req, res, next) => {
         });
 });
 
-router.post('/pictur', uploadCloud.array('image'), (req, res, next) => {
-    console.log(req.files);
-    res.send('ue');
-})
+// router.post('/pictur', uploadCloud.array('image'), (req, res, next) => {
+//     console.log(req.files);
+//     res.send('ue');
+// })
 
 // Route to add pictures to event using axios
 router.post('/pictures/add/:id', uploadCloud.array('image'), (req, res, next) => {

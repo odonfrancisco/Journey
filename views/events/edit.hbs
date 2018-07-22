@@ -113,12 +113,20 @@
     <label>Event Picture:</label>
     <input type="file" name="eventPic">
 
+    <input type="text" name="latitude" id="latitude" style="display:none">
+    <input type="text" name="longitude" id="longitude" style="display:none">
+
     <input type="submit" value="Edit">
 
 </form>
 
 <br><br>
 
+
 <a href="/events/delete/{{data.event._id}}"><input type="button" value="Delete {{data.event.name}}"></a>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw4DnnwzE3bgts7cc5LSq3b1OX6cT_eiso"></script>
+<div id="map" style="display:none"></div>
+<input type="button" id="submit">
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw4DnnwzE3bgts7cc5LSq3b1OX6cT_eis"></script>
+<script src='/javascripts/maps.js'></script>
