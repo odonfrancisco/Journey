@@ -3,15 +3,56 @@
   <head>
     <title>{{title}}</title>
     <link rel="shortcut icon" href="https://res.cloudinary.com/odon/image/upload/v1530731353/folder-name/IMG-20180527-WA0007.jpg.jpg">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.bundle.min.js">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
+    {{!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.bundle.min.js">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css"> --}}
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
   <body>
   
-    <div {{!-- id="nav" --}} class="navbar-collapse">
+  <div id="mySidenav" class="sidenav">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+    <ul>
+    {{#if req.user}}
       
-      <text>{{#if req.user}}<a href="/users/{{req.user._id}}"><img class="profile-pic" src="{{req.user.profilePic}}">Welcome {{req.user.name.first}}</a>{{/if}}</text>
+        <span><li class="user-nav"><a href="/users/{{req.user._id}}" ><img class="profile-pic" src="{{req.user.profilePic}}"></a></li></span>
+        <span><li class="user-nav"><a href="/users/{{req.user._id}}"><span>{{req.user.name.first}}</span></a></li></span>
+    {{/if}}
+    <li><span><a href="/events">Events</a>
+      <img src="/images/plus-icon.png" id="show-events" type="button" value="Show" onclick="showList('show-events', 'hide-events', 'all-events')">
+      <img src="/images/minus-icon.png" style="display:none" id="hide-events" onclick="showList('hide-events', 'show-events', 'all-events')">
+      </span>
+      {{#if req.user.events}}
+        <ul class="sub-list">
+          {{#each req.user.events}}
+            <li style="display:none" class="all-events"><span><a href="/events/{{this._id}}">{{this.name}}</a></li>
+          {{/each}}
+        </ul>
+      {{/if}}</li>
+    <li><span><a href="/groups">Groups</a>
+        <img src="/images/plus-icon.png" id="show-groups" type="button" value="Show" onclick="showList('show-groups', 'hide-groups', 'all-groups')">
+        <img src="/images/minus-icon.png" style="display:none" type="button" id="hide-groups" value="Done" onclick="showList('hide-groups', 'show-groups', 'all-groups')">
+        </span>
+      {{#if req.user.groups}}
+        <ul class="sub-list">
+          {{#each req.user.groups}}
+            <li style="display:none" class="all-groups"><span><a href="/groups/{{this._id}}">{{this.name}}</a></li>
+          {{/each}}
+        </ul>
+      {{/if}}</li>
+    
+    <li><span><a href="/auth/logout">Logout :(</a></span></li>
+
+    </ul>
+
+  </div>
+
+<!-- Use any element to open the sidenav -->
+<input id="navbtn" type="button" value="Nav" onclick="openNav()">
+<div onclick="closeNav()">
+
+    {{!-- <nav id="nav">
+      
+      {{#if req.user}}<a href="/users/{{req.user._id}}"><img class="profile-pic" src="{{req.user.profilePic}}">Welcome {{req.user.name.first}}</a>{{/if}}<
       
       <ul>
         {{#if req.user}}
@@ -23,12 +64,16 @@
         <li><a href="/auth/login">Login!</a></li>
         {{/if}}
       </ul>
-    </div>
+    </nav> --}}
+  {{{body}}}
 
-    {{{body}}}
-
+</div>
+  
     <div style="display:none" id="domainName">{{req.userDomain}}</div>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src='/javascripts/script.js'></script>
+
+
+{{{body.req}}}
   </body>
 </html>

@@ -221,3 +221,18 @@ function removeInvitedUser(userId, eventId){
       window.location.reload();
     })
 }
+
+
+/* Set the width of the side navigation to 250px */
+function openNav() {
+  document.getElementById("mySidenav").style.width = "370px";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+console.log(document)
+window.onclick(closeNav())
+// document.addEventListener('onclick', closeNav())

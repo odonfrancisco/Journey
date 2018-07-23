@@ -78,10 +78,12 @@ const User = require('./models/User')
 app.use((req, res, next) => {
   // Adds user domain to be accessed from hbs to be used with axios on heroku 
   req.userDomain = process.env.DOMAIN;
+  if(req.user){
   User.findById(req.user._id).populate('events', 'name').populate('groups', 'name')
     .then(user => {
       req.user = user;
     });
+  }
   // Allows request to be accessed from handlebars
   app.locals.req = req;
   // console.log(req.url)

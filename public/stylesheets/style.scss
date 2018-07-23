@@ -8,8 +8,122 @@ html, head, body{
   padding: 0
 }
 
+/* The side navigation menu */
+.sidenav {
+  height: 100%; /* 100% Full-height */
+  width: 0; /* 0 width - change this with JavaScript */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Stay on top */
+  top: 0; /* Stay at the top */
+  left: 0;
+  background-color: deeppink; /* Black*/
+  overflow-x: hidden; /* Disable horizontal scroll */
+  padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+}
+
+/* The navigation menu links */
+.sidenav a {
+  // margin-top: 8px;
+  padding: 0 8px 0 122px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  transition: 0.3s;
+}
+
+.sidenav> ul> li:last-child{
+  margin-top: 30px;
+}
+
+.user-nav{
+  display: flex;
+  justify-content: center;
+}
+
+.user-nav a {
+  padding: 0;
+}
+
+.user-nav span{
+  margin-bottom: 40px;
+}
+
+.sidenav span {
+  margin-top: 8px;
+}
+
+.sidenav ul {
+  margin: 0;
+  padding: 0;
+}
+
+.all-groups, .all-events{
+  padding-left: 35px;
+}
+
+#show-events, #show-groups{
+  padding: 0 20px 0 5px;
+  height: 17px;
+}
+
+#hide-events , #hide-groups{
+  padding: 10px 20px 2px 2px;
+  height: 7px;
+}
+// .profile-pic{
+//   display: block;
+//   margin-right: auto;
+//   margin-left: auto;
+// }
+
+#navbtn{
+  float: right;
+}
+
+.sidenav span {
+  display: block;
+}
+
+/* When you mouse over the navigation links, change their color */
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+/* Position and style the close button (top right corner) */
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* Style page content - use this if you want to push the page content to the right when you open the side navigation */
+#main {
+  transition: margin-left .5s;
+  padding: 20px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+
+// BOOTSTRAP WATTUP
+
+
+
 #nav ul li a {
   color: whitesmoke;
+}
+
+ul{
+  // display: flex;
+  list-style-type: none;
+  margin: 0;
 }
 
 #nav ul{
@@ -112,22 +226,27 @@ username{
   height: 150px
 }
 
+
+
+
 @media (max-width: 768px){
   #nav text{
     font-size: 3vw;
   }
   
-  #nav ul li{
-    margin-right: 2vw;
-    font-size: 4.5vw;
-  }
+  // #nav ul li{
+  //   margin-right: 2vw;
+  //   font-size: 4.5vw;
+  // }
 
   #nav ul :last-child{
     margin-right: 4vw;
   }
 
   .profile-pic{
-    height: 60px;
+    max-height: 130px;
+    max-width: 200px;
+    border-radius: 6px; 
   }
 
   .event-pic{
