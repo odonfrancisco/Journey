@@ -55,6 +55,9 @@ html, head, body {
   margin: 0;
   padding: 0; }
 
+.sub-list a {
+  font-size: 20px; }
+
 .all-groups, .all-events {
   padding-left: 35px; }
 
@@ -67,7 +70,9 @@ html, head, body {
   height: 7px; }
 
 #navbtn {
-  float: right; }
+  position: fixed;
+  top: 7px;
+  right: 15px; }
 
 .sidenav span {
   display: block; }
@@ -201,8 +206,6 @@ username {
     max-height: 130px;
     max-width: 200px;
     border-radius: 6px; }
-  .event-pic {
-    width: 100%; }
   .event-pics-container {
     display: inline-flex;
     flex-wrap: wrap;

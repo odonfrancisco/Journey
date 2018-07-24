@@ -233,6 +233,4 @@ function closeNav() {
   document.getElementById("mySidenav").style.width = "0";
 }
 
-console.log(document)
-window.onclick(closeNav())
-// document.addEventListener('onclick', closeNav())
+window.onclick(closeNav());

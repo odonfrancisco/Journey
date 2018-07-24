@@ -58,6 +58,10 @@ html, head, body{
   padding: 0;
 }
 
+.sub-list a{
+  font-size: 20px;
+}
+
 .all-groups, .all-events{
   padding-left: 35px;
 }
@@ -78,7 +82,9 @@ html, head, body{
 // }
 
 #navbtn{
-  float: right;
+  position: fixed;
+  top: 7px;
+  right: 15px;
 }
 
 .sidenav span {
@@ -249,9 +255,9 @@ username{
     border-radius: 6px; 
   }
 
-  .event-pic{
-    width: 100%;
-  }
+  // .event-pic{
+  //   width: 100%;
+  // }
 
   .event-pics-container{
     display: inline-flex;

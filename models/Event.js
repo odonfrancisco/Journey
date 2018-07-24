@@ -88,7 +88,7 @@ const eventSchema = Schema({
     },
     location: {
         type: {type: String},
-        coordinates: [Number]
+        coordinates: [Number],
     },
     address: {
         street: String,
