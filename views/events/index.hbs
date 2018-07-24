@@ -6,13 +6,13 @@
             <br><br>
             <input id="join-event" type="button" class="btn" value="Join Event" onclick="showForm('join-event', 'join-event-form')">
             <form id="join-event-form" onsubmit="joinEvent()" style="display:none">
-                <input id="eventId" class="input" type="text" name="eventId" placeholder="Super Secret Event ID">
+                <input id="eventId" class="input-sm" type="text" name="eventId" placeholder="Super Secret Event ID">
                 <input type="submit" class="btn" value="Join Event">
             </form>
         </div>
         <div class="col-2"></div>
         <div class="col-3">
-            <h3>Events</h3>
+            <h2>Events</h2>
         </div>
     </div>
 </div>
@@ -20,19 +20,25 @@
 <div class="container-fluid">
     <div class="row">
     {{#each event}}
-        <div class="col-md-6">
+        <div class="col-md-6 col-xl-4">
             <a href="/events/{{this._id}}"><img class="img-fluid" src="{{this.eventPic}}" class="event-pic"></a>
-            <h3 class="text-center text-capitalize">{{this.name}}</h3>
+            <a href="/events/{{this._id}}"><h3 class="text-center text-capitalize">{{this.name}}</h3></a>
             <p class="text-center">{{this.description}}</p>
+            <div class="row">
+                <span class="text-left col-6">
+                    Start: {{this.start.date}}<br>
+                    End: {{this.end.date}}
+                </span>
+                    {{#if this.address.zip}}
+                        <span class="text-right pull-right col-6">{{this.address.street}} {{this.address.apt}} {{this.address.city}} {{this.address.state}} {{this.address.zip}}</span>
+                    {{/if}}
+                    <br><br>
+            </div>
+            
             {{#if this.yes}}    
                 <a href="/events/edit/{{this._id}}">Edit</a>
             {{/if}}
-            <p>{{this.start.date}}</p>
-            <p>{{this.end.date}}</p>
-            {{#if this.address.zip}}
-            <p>Address: {{this.address.street}} {{this.address.apt}} {{this.address.city}} {{this.address.state}} {{this.address.zip}}</p>
-            {{/if}}
         </div>
-        {{/each}}
+    {{/each}}
     </div>
 </div>

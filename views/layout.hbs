@@ -18,7 +18,7 @@
         <span><li class="user-nav"><a href="/users/{{req.user._id}}"><span>{{req.user.name.first}}</span></a></li></span>
     {{/if}}
     <li><span><a href="/events">Events</a>
-      <img src="/images/plus-icon.png" id="show-events" type="button" value="Show" onclick="showList('show-events', 'hide-events', 'all-events')">
+      <img src="/images/plus-icon.png" id="show-events" onclick="showList('show-events', 'hide-events', 'all-events')">
       <img src="/images/minus-icon.png" style="display:none" id="hide-events" onclick="showList('hide-events', 'show-events', 'all-events')">
       </span>
       {{#if req.user.events}}
@@ -29,8 +29,8 @@
         </ul>
       {{/if}}</li>
     <li><span><a href="/groups">Groups</a>
-        <img src="/images/plus-icon.png" id="show-groups" type="button" value="Show" onclick="showList('show-groups', 'hide-groups', 'all-groups')">
-        <img src="/images/minus-icon.png" style="display:none" type="button" id="hide-groups" value="Done" onclick="showList('hide-groups', 'show-groups', 'all-groups')">
+        <img src="/images/plus-icon.png" id="show-groups" onclick="showList('show-groups', 'hide-groups', 'all-groups')">
+        <img src="/images/minus-icon.png" style="display:none" id="hide-groups" value="Done" onclick="showList('hide-groups', 'show-groups', 'all-groups')">
         </span>
       {{#if req.user.groups}}
         <ul class="sub-list">
