@@ -1,56 +1,117 @@
-<img src="{{event.eventPic}}" class="event-pic">
-{{#if event.yes}}
-    <a href="/events/edit/{{event._id}}"><button>Edit {{event.name}}</button></a>
-    <input type="button" value="Add Pictures" id="addPicture" onclick="showForm('addPicture', 'picturesForm')">
-    {{else}}
-    {{!-- <a href="/events/edit/pictures/{{event._id}}"> --}}<button id="addPicture" onclick="showForm('addPicture', 'picturesForm')">Add Pictures</button>{{!-- </a> --}}
-{{/if}}
-{{!-- <form id="picturesForm" style="display:none" action="/events/pictures/add/{{event._id}}" action="/events/pictur" onsubmit="addPic()" method="post" enctype="multipart/form-data"> --}}
-<div id="picturesForm" style="display:none">
-    <input type="file" multiple name="pictures">
-    <input type="button" onclick="addPic('{{event._id}}')" value="Add Pictures">
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            {{#if event.yes}}
+                <a href="/events/edit/{{event._id}}"><input type="button" class="btn btn-sm" value="Edit"></a>
+            {{/if}}
+        </div>
+        <div class="col-6">
+            <h1 class="text-center text-capitalize">{{event.name}}</h1>
+        </div>
+    </div>
 </div>
-{{event.name}}<br>
-{{event.description}}<br>
-{{#if event.address.zip}}
-    {{#with event.address}}
-        {{street}}
-        {{apt}}
-        {{city}}
-        {{state}}
-        {{zip}}
-    {{/with}}
-{{/if}}
-<br>
-Start {{#with event.start}}
-    Date: {{date}}<br>
-    Time: {{time}}
-{{/with}}
-<br>
-End {{#with event.end}}
-    Date: {{date}}<br>
-    Time: {{time}}
-{{/with}}
-<br>
-{{#if event.location.coordinates}}
-<input id="location" style="display:none" value="{{event.location.coordinates}}">
 
-<input type="button" value="Show Map" onclick="showMap()">
-<div id="event-map"></div>
-{{/if}}
+<div class="container-fluid">
+{{!-- <div class="col-lg-8"> --}}
+    <img src="{{event.eventPic}}" class="event-pic img-fluid">
+    <input type="button" class="btn btn-block" value="Add Pictures" id="addPicture" onclick="showForm('addPicture', 'picturesForm')">
+    <div id="picturesForm" style="display:none">
+        <input type="file" class="btn" multiple  name="pictures">
+        <input type="button" class="btn" onclick="addPic('{{event._id}}')" value="Add Pictures">
+    </div>
+
+    <br>
+    <h6>{{event.description}}</h6>
+    <br>
+    <div class="row">
+        <span class="text-left col-6">
+        Start {{#with event.start}}
+            Date: {{date}}<br>
+            Time: {{time}}
+            {{/with}}
+        <br><br>
+        End {{#with event.end}}
+            Date: {{date}}<br>
+            Time: {{time}}
+            {{/with}}
+        </span>
+        <div class="text-right col-6">
+            {{!-- <div id="event-map"> --}}
+            {{#if event.address.zip}}
+                {{#with event.address}}
+                    {{street}}
+                    {{apt}}<br>
+                    {{city}}
+                    {{state}}
+                    {{zip}}
+                {{/with}}
+            {{/if}}
+            {{!-- </div> --}}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            {{#if event.location.coordinates}}
+                <input type="button" class="btn" id="showMap" value="Map" onclick="showMap()">
+                <input type="button" class="btn" id="hideMap" value="Hide Map" onclick="hideMap()" style="display:none">
+
+                <div id="event-map" style="display:none"></div>
+
+                <input id="location" style="display:none" value="{{event.location.coordinates}}">              
+            {{/if}}
+        </div>
+        <div class="col-4 text-right">
+            {{#if event.guests}}
+            <input type="button" id="show-guests-button" value="Guests" class="btn" onclick="showGuests()">
+            <input type="button" id="hide-guests-button" value="Hide Guests" class="btn" onclick="hideGuests()" style="display:none">
+            <div id="guests" style="display:none">
+                <h5>Guests</h5>
+                    <ul class="list-unstyled">
+                    {{#each event.guests}}
+                        <li>{{this.name.first}} {{this.name.last}}</li>
+                    {{/each}}
+                    </ul>
+                {{/if}}
+            </div>
+        </div>
+    </div>
+
+{{!-- </div> --}}
+</div>
+
+<br>
 
 
-<div class="event-pics-container">
+
+<div class="container-fluid">
+    <div class="row">
     {{#each event.pictures}}
-    <div class="event-pics-div">
-        <img src="{{this.picPath}}" class="event-pics">
+    <div class="col-12 col-md-6 col-lg-4 event-pics-div">
+        <img src="{{this.picPath}}" class="img img-fluid">
         <text>By: {{this.creatorId.name.first}} {{this.creatorId.name.last}}</text><br>
         {{#if this.description}}
             <text>Description: {{this.description}}</text>        
         {{/if}}
 
         {{#if comments}}
-            <div class="event-pics-comments">
+            <div class="row">
+                <div class="col-4">
+                    <input type="button" class="btn btn-sm" id="{{this._id}}-comments-button" value="View Comments" onclick="showComments('{{this._id}}')">
+                </div>
+                {{#if ../event.yes}}
+                    <div class="col-8">
+                        <input class="pull-right" type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
+                        <form id="{{this.picPath}}" style="display:none" action="/events/pictures/edit/{{../event._id}}/{{this._id}}" method="post">
+                            <input type="text" name="picName" value="{{this.picName}}">
+                            <input type="text" name="description" placeholder="Description" value="{{this.description}}">
+                            <input type="submit" value="Edit Picture">
+                            {{!-- <a href="/events/pictures/delete/{{this._id}}"> --}}<input type="button" onclick="removePic('{{this._id}}')" value="Delete Picture">{{!-- </a> --}}
+                        </form>
+                    </div>
+                {{/if}}
+            </div>
+            <div class="event-pics-comments" id="{{this._id}}-comments" style="display:none">
                 Comments<ul>
                     {{#each comments}}
                         <li>{{this.creatorId.name.first}} {{this.creatorId.name.last}}
@@ -76,15 +137,7 @@ End {{#with event.end}}
         {{/if}}
 
 
-        {{#if ../event.yes}}
-        <input type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
-        <form id="{{this.picPath}}" style="display:none" action="/events/pictures/edit/{{../event._id}}/{{this._id}}" method="post">
-            <input type="text" name="picName" value="{{this.picName}}">
-            <input type="text" name="description" placeholder="Description" value="{{this.description}}">
-            <input type="submit" value="Edit Picture">
-            {{!-- <a href="/events/pictures/delete/{{this._id}}"> --}}<input type="button" onclick="removePic('{{this._id}}')" value="Delete Picture">{{!-- </a> --}}
-        </form>
-        {{/if}}
+        
         <input type="button" id="{{this._id}}comment" value="Add Comment!" onclick="showForm('{{this._id}}comment', '{{this._id}}comment-form')">
         <form id="{{this._id}}comment-form" style="display:none" onsubmit="addComment('{{this._id}}')">
             <input id="{{this._id}}-addComment" type="text" name="commentContent" placeholder="Whatcha got to say?">
@@ -92,6 +145,7 @@ End {{#with event.end}}
         </form>
     </div>
     {{/each}}
+    </div>
 </div>
 
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCw4DnnwzE3bgts7cc5LSq3b1OX6cT_eis"></script>

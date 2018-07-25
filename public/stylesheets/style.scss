@@ -1,7 +1,7 @@
 body {
   // padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: papayawhip;
+  color: #faebd7;
   background-color: #333333
 }
 
@@ -30,7 +30,7 @@ html, head, body{
   padding: 0 8px 0 122px;
   text-decoration: none;
   font-size: 25px;
-  color: papayawhip;
+  color: #faebd7;
   transition: 0.3s;
 }
 
@@ -87,6 +87,16 @@ html, head, body{
   position: fixed;
   top: 7px;
   right: 15px;
+  height: 50px;
+  z-index: 4;
+}
+
+.event-row{
+  margin-top: 20px;
+}
+
+.event-row a {
+  color: #faebd7;
 }
 
 .sidenav span {
@@ -232,8 +242,16 @@ username{
 }
 
 #event-map {
-  width: 50%;
-  height: 150px
+  // width: 50%;
+  height: 175px
+}
+
+#addPicture{
+  margin-top: 6px;
+}
+
+.btn {
+  margin: 2px;
 }
 
 
@@ -263,12 +281,12 @@ username{
   //   width: 100%;
   // }
 
-  .event-pics-container{
-    display: inline-flex;
-    // flex-direction: column;
-    flex-wrap: wrap;
-    padding: 10px;
-  }
+  // .event-pics-container{
+  //   display: inline-flex;
+  //   // flex-direction: column;
+  //   flex-wrap: wrap;
+  //   padding: 10px;
+  // }
 
   .event-pics-div{
     margin-bottom: 20px;
@@ -277,9 +295,13 @@ username{
     border-radius: 20px;
   }
 
-  .event-pics{
-    width: 100%;
-    border-radius:20px;
-  }
+  // .event-pics{
+  //   width: 100%;
+  //   border-radius:20px;
+  // }
 
+}
+
+input{
+  color: black
 }

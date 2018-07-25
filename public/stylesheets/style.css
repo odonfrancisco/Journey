@@ -1,6 +1,6 @@
 body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  color: papayawhip;
+  color: #faebd7;
   background-color: #333333; }
 
 html, head, body {
@@ -34,7 +34,7 @@ html, head, body {
   padding: 0 8px 0 122px;
   text-decoration: none;
   font-size: 25px;
-  color: papayawhip;
+  color: #faebd7;
   transition: 0.3s; }
 
 .sidenav > ul > li:last-child {
@@ -74,7 +74,15 @@ html, head, body {
 #navbtn {
   position: fixed;
   top: 7px;
-  right: 15px; }
+  right: 15px;
+  height: 50px;
+  z-index: 4; }
+
+.event-row {
+  margin-top: 20px; }
+
+.event-row a {
+  color: #faebd7; }
 
 .sidenav span {
   display: block; }
@@ -199,8 +207,13 @@ username {
   height: 400px; }
 
 #event-map {
-  width: 50%;
-  height: 150px; }
+  height: 175px; }
+
+#addPicture {
+  margin-top: 6px; }
+
+.btn {
+  margin: 2px; }
 
 @media (max-width: 768px) {
   #nav text {
@@ -211,17 +224,13 @@ username {
     max-height: 130px;
     max-width: 200px;
     border-radius: 6px; }
-  .event-pics-container {
-    display: inline-flex;
-    flex-wrap: wrap;
-    padding: 10px; }
   .event-pics-div {
     margin-bottom: 20px;
     padding: 10px 15px 10px 15px;
     background-color: rgba(105, 81, 96, 0.733);
-    border-radius: 20px; }
-  .event-pics {
-    width: 100%;
     border-radius: 20px; } }
+
+input {
+  color: black; }
 
 /*# sourceMappingURL=style.css.map */

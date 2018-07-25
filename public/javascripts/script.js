@@ -89,11 +89,70 @@ function showList(button1, button2, listItems){
   }
 }
 
-// const commentApiUrl = process.env.DOMAIN + 'api/events/pictures/comment';
+// Tried turning all those onclick variables into one function. 
+  // More time than necessary
+// function clickVar(fun){
 
-// function console(){
-//   console.log(req)
+//   yeet = `${fun}`
+// console.log(yeet)
+//   let onclick = function onclick(event){
+//     yeet;
+//   } 
+//   return onclick
 // }
+
+function showGuests(){
+  const onclick = function onclick(event) {
+    hideGuests();
+  };
+
+  document.getElementById('guests').style="";
+  // Changes button's words and its onclick function
+  document.getElementById('show-guests-button').value="Hide Guests";
+  document.getElementById('show-guests-button').outerHTML=`<input type="button" id="show-guests-button" value="Hide Guests" class="btn" onclick="hideGuests()">`;
+  document.getElementById('show-guests-button').onclick=onclick;
+  // Finessed the fuck out of this: instead of having two buttons on the html,
+    // just have one button and change its values. It does add another line
+    // of code but I feel its better than having two buttons in the html 
+  // document.getElementById('show-guests-button').style="display:none";
+  // document.getElementById('hide-guests-button').style="";
+}
+
+function hideGuests(){
+  const onclick = function onclick(event) {
+    showGuests();
+  };
+
+  document.getElementById('guests').style="display:none";
+  document.getElementById('show-guests-button').value="Guests";
+  document.getElementById('show-guests-button').onclick=onclick;
+  // document.getElementById('show-guests-button').style="";
+  // document.getElementById('hide-guests-button').style="display:none";
+}
+
+function showComments(commentsId){
+  const onclick = function onclick(event) {
+    hideComments(commentsId);
+  };
+
+  document.getElementById(`${commentsId}-comments`).style="";
+  document.getElementById('commentsId-comments-button').value="Hide Comments";
+  document.getElementById('commentsId-comments-button').onclick=onclick;
+}
+
+function hideComments(commentsId){
+  const onclick = function onclick(event) {
+    showComments(commentsId);
+  };
+
+  document.getElementById(`${commentsId}-comments`).style="display:none";
+  document.getElementById('commentsId-comments-button').value="Comments";
+  document.getElementById('commentsId-comments-button').onclick=onclick;  
+}
+
+
+
+// AXIOS WATTUP
 
 const domainUrl = document.getElementById('domainName').innerText;
 

@@ -10,9 +10,8 @@
                 <input type="submit" class="btn" value="Join Event">
             </form>
         </div>
-        <div class="col-2"></div>
-        <div class="col-3">
-            <h2>Events</h2>
+        <div class="col-6">
+            <h2 class="text-center">Events</h2>
         </div>
     </div>
 </div>
@@ -20,7 +19,7 @@
 <div class="container-fluid">
     <div class="row">
     {{#each event}}
-        <div class="col-md-6 col-xl-4">
+        <div class="col-md-6 col-xl-4 event-row">
             <a href="/events/{{this._id}}"><img class="img-fluid" src="{{this.eventPic}}" class="event-pic"></a>
             <a href="/events/{{this._id}}"><h3 class="text-center text-capitalize">{{this.name}}</h3></a>
             <p class="text-center">{{this.description}}</p>
@@ -30,9 +29,9 @@
                     End: {{this.end.date}}
                 </span>
                     {{#if this.address.zip}}
-                        <span class="text-right pull-right col-6">{{this.address.street}} {{this.address.apt}} {{this.address.city}} {{this.address.state}} {{this.address.zip}}</span>
+                        <address class="text-right pull-right col-6">{{this.address.street}} {{this.address.apt}} {{this.address.city}} {{this.address.state}} {{this.address.zip}}</address>
                     {{/if}}
-                    <br><br>
+                    {{!-- <br><br> --}}
             </div>
             
             {{#if this.yes}}    

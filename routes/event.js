@@ -14,7 +14,7 @@ function capitalize(val) {
 // Function to check user's permission to view event
 function checkUser(id) {
     return (req, res, next) => {
-        Event.findById(req.params.id).populate('pictures.creatorId', 'name username').populate('pictures.comments.creatorId', 'name username').populate('groupId', 'members')
+        Event.findById(req.params.id).populate('pictures.creatorId', 'name username').populate('pictures.comments.creatorId', 'name username').populate('groupId', 'members').populate('guests', 'name')
             .then(event => {
                 if (event.guests.indexOf(req.session.passport.user) !== -1){
                     req.event = event;
@@ -372,28 +372,52 @@ router.post('/pictures/edit/:eventId/:picId', ensureLoggedIn('/auth/login'), (re
     // Destructures name of picture and description from req.body
     const {picName, description} = req.body;
     // Finds event whose picture to update
-    Event.findById(req.params.eventId, {pictures: {$elemMatch: {_id: req.params.picId}}}, {pictures: 1})
-        .then(event => {
-            // console.log('This is the event found: ', event);
 
-            // Because I only found the picture I'm editing and not all the event's pictures, 
-            // I use event.pictures[0] since it's an array of the only picture found
-            event.pictures[0].picName = picName;
-            event.pictures[0].description = description;
-            // Saves event after editing its respective picture
-            event.save()
-                .then(event => {
-                    res.redirect(`/events/${event._id}`);
-                })
-                .catch(err => {
-                    console.log('Error in saving the event: ', err);
-                    next();
-                });
+    // Event.findById(req.params.eventId, {pictures: {$elemMatch: {_id: req.params.picId}}}, {pictures: 1})
+    //     .then(event => {
+    //         // console.log('This is the event found: ', event);
+
+    //         // Because I only found the picture I'm editing and not all the event's pictures, 
+    //         // I use event.pictures[0] since it's an array of the only picture found
+    //         event.pictures[0].picName = picName;
+    //         event.pictures[0].description = description;
+
+    //         // Event.update()
+    //         // .then(notEvent => {
+    //         //     res.redirect(`/events/${event._id}`)
+    //         // })
+    //         // .catch(err => {
+    //         //     console.log('Error in updating Event Model after updating a certain pictures details: ', err);
+    //         //     next();
+    //         // });
+    //         // Saves event after editing its respective picture
+    //         // event.save()
+    //         //     .then(event => {
+    //         //         res.redirect(`/events/${event._id}`);
+    //         //     })
+    //         //     .catch(err => {
+    //         //         console.log('Error in saving the event: ', err);
+    //         //         next();
+    //         //     });
+    //     })
+    //     .catch(err => {
+    //         console.log('Error in finding event associated to picture: ', err);
+    //         next();
+    //     })
+    
+        Event.update({'pictures._id': req.params.picId}, {'pictures.$': {
+            picName: picName,
+            description: description,
+        }} )
+        .then(event => {
+            console.log('Heres what event looks like: ', event);
+            res.redirect(`/events/${req.params.eventId}`)
         })
         .catch(err => {
-            console.log('Error in finding event associated to picture: ', err);
+            console.log('Error in updating Event Model after updating a certain pictures details: ', err);
             next();
         });
+
 });
 
 // Route to delete picture using axios

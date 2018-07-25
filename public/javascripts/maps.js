@@ -66,18 +66,27 @@ function showMap(){
 
   // Map initialization
   const map = new google.maps.Map(document.getElementById('event-map'), {
-    zoom: 15,
+    zoom: 13,
     center: eventAddress
   });
 
-  // Add a marker for Ironhack Barcelona
+  // Add a marker for Event
   const eventAddressMarker = new google.maps.Marker({
     position: {
       lat: eventAddress.lat,
       lng: eventAddress.lng
     },
     map: map,
-    title: "Barcelona Campus"
+    title: "Yay!"
   });
 
+  document.getElementById('showMap').style="display:none";
+  document.getElementById('hideMap').style="";
+
+}
+
+function hideMap(){
+    document.getElementById('event-map').style="display:none";
+    document.getElementById('showMap').style="";
+    document.getElementById('hideMap').style="display:none";
 }
