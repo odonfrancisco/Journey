@@ -136,8 +136,8 @@ function showComments(commentsId){
   };
 
   document.getElementById(`${commentsId}-comments`).style="";
-  document.getElementById('commentsId-comments-button').value="Hide Comments";
-  document.getElementById('commentsId-comments-button').onclick=onclick;
+  document.getElementById(`${commentsId}-comments-button`).value="Hide Comments";
+  document.getElementById(`${commentsId}-comments-button`).onclick=onclick;
 }
 
 function hideComments(commentsId){
@@ -146,8 +146,8 @@ function hideComments(commentsId){
   };
 
   document.getElementById(`${commentsId}-comments`).style="display:none";
-  document.getElementById('commentsId-comments-button').value="Comments";
-  document.getElementById('commentsId-comments-button').onclick=onclick;  
+  document.getElementById(`${commentsId}-comments-button`).value="Comments";
+  document.getElementById(`${commentsId}-comments-button`).onclick=onclick;  
 }
 
 

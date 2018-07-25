@@ -97,7 +97,7 @@
         {{#if comments}}
             <div class="row">
                 <div class="col-4">
-                    <input type="button" class="btn btn-sm" id="{{this._id}}-comments-button" value="View Comments" onclick="showComments('{{this._id}}')">
+                    <input type="button" class="btn btn-sm" id="{{this._id}}-comments-button" value="Comments" onclick="showComments('{{this._id}}')">
                 </div>
                 {{#if ../event.yes}}
                     <div class="col-8">
@@ -112,7 +112,7 @@
                 {{/if}}
             </div>
             <div class="event-pics-comments" id="{{this._id}}-comments" style="display:none">
-                Comments<ul>
+                <ul>
                     {{#each comments}}
                         <li>{{this.creatorId.name.first}} {{this.creatorId.name.last}}
                             <span>

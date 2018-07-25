@@ -405,10 +405,7 @@ router.post('/pictures/edit/:eventId/:picId', ensureLoggedIn('/auth/login'), (re
     //         next();
     //     })
     
-        Event.update({'pictures._id': req.params.picId}, {'pictures.$': {
-            picName: picName,
-            description: description,
-        }} )
+        Event.update({'_id': req.params.eventId, 'pictures._id': req.params.picId}, {$set: {'pictures.$.picName': picName, 'pictures.$.description': description}})
         .then(event => {
             console.log('Heres what event looks like: ', event);
             res.redirect(`/events/${req.params.eventId}`)
