@@ -101,7 +101,7 @@
                 </div>
                 {{#if ../event.yes}}
                     <div class="col-8">
-                        <input class="pull-right" type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
+                        <input class="pull-right btn btn-sm" type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
                         <form id="{{this.picPath}}" style="display:none" action="/events/pictures/edit/{{../event._id}}/{{this._id}}" method="post">
                             <input type="text" name="picName" value="{{this.picName}}">
                             <input type="text" name="description" placeholder="Description" value="{{this.description}}">
@@ -143,6 +143,20 @@
             <input id="{{this._id}}-addComment" type="text" name="commentContent" placeholder="Whatcha got to say?">
             <input type="submit" value="Add!">
         </form>
+
+        {{#unless comments}}
+             {{#if ../event.yes}}
+                    <div class="col-8">
+                        <input class="pull-right btn btn-sm" type="button" id="{{this._id}}" value="Edit Details" onclick="showForm('{{this._id}}', '{{this.picPath}}')">
+                        <form id="{{this.picPath}}" style="display:none" action="/events/pictures/edit/{{../event._id}}/{{this._id}}" method="post">
+                            <input type="text" name="picName" value="{{this.picName}}">
+                            <input type="text" name="description" placeholder="Description" value="{{this.description}}">
+                            <input type="submit" value="Edit Picture">
+                            {{!-- <a href="/events/pictures/delete/{{this._id}}"> --}}<input type="button" onclick="removePic('{{this._id}}')" value="Delete Picture">{{!-- </a> --}}
+                        </form>
+                    </div>
+            {{/if}}
+        {{/unless}}
     </div>
     {{/each}}
     </div>

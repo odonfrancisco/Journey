@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
+    "ndb": "ndb nodemon ./bin/www",
     "dev": "DEBUG=journey:* nodemon ./bin/www"
   },
   "dependencies": {
