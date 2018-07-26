@@ -91,13 +91,33 @@ html, head, body{
   z-index: 4;
 }
 
-.event-row{
-  margin-top: 20px;
+.event-div{
+  margin: 20px auto 20px auto;
+  padding: 10px 10px 10px 10px;
+  background-color: rgba(165, 118, 147, 0.733);
+  border-radius: 20px;
 }
 
-.event-row a {
+.event-div a {
   color: #faebd7;
 }
+
+
+.event-pics-div{
+  margin: 0 auto 20px auto;
+  padding: 10px 10px 10px 10px;
+  background-color: rgba(105, 81, 96, 0.733);
+  border-radius: 20px;
+}
+
+.comment-add{
+  margin: 7px 0 7px 0;
+}
+
+input{
+  color: black
+}
+
 
 .sidenav span {
   display: block;
@@ -254,6 +274,11 @@ username{
   margin: 2px;
 }
 
+.center{
+  margin-right: auto;
+  margin-left: auto;
+  display: inline-block
+}
 
 
 
@@ -288,20 +313,11 @@ username{
   //   padding: 10px;
   // }
 
-  .event-pics-div{
-    margin-bottom: 20px;
-    padding: 10px 15px 10px 15px;
-    background-color: rgba(105, 81, 96, 0.733);
-    border-radius: 20px;
-  }
+
 
   // .event-pics{
   //   width: 100%;
   //   border-radius:20px;
   // }
 
-}
-
-input{
-  color: black
 }

@@ -1,14 +1,37 @@
-<a href="/groups/create"><input type="button" value="Create Group"></a>
-<input id="join-group" type="button" value="Join Group" onclick="showForm('join-group', 'join-group-form')">
-<form id="join-group-form" onsubmit="joinGroup()" style="display:none">
-    <input type="text" id="groupId" placeholder="Supremely Secret Group ID">
-    <input type="submit" value="Join Group!">
-</form>
 
-{{#each groups}}
-    <div>
-        <a href="/groups/{{this._id}}"><img class="event-pic" src="{{this.groupPic}}"></a>
-        <p>{{this.name}}</p>
-        <p>{{this.description}}</p>
+<div class="conatiner-fluid">
+    <div class="row">
+        <div class="col-3">
+            <a href="/groups/create"><input type="button" class="btn" value="Create Group"></a>
+            <br><br>
+            <input id="join-group" type="button" class="btn" value="Join Group" onclick="showForm('join-group', 'join-group-form')">
+            <form id="join-group-form" onsubmit="joinGroup()" style="display:none">
+                <input type="text" id="groupId" placeholder="Supremely Secret Group ID">
+                <input type="submit" value="Join Group!">
+            </form>
+        </div>
+        <div class="col-6">
+            <h2 class="text-center mt-4">Groups</h2>
+        </div>
     </div>
-{{/each}}
+</div>
+
+<div class="container-fluid">
+    <div class="row event-row">
+        {{#each groups}}
+            <div class="col-sm-6 col-lg-4">
+                <div class="row justify-content-center">
+                    <a href="/groups/{{this._id}}">
+                        <img class="img-fluid" src="{{this.groupPic}}">
+                    </a>
+                </div>
+                <a href="/groups/{{this._id}}">
+                    <h3 class="text-center">{{this.name}}</h3>
+                </a>
+                <a href="/groups/{{this._id}}">
+                    <h6 class="text-center">{{this.description}}</h6>
+                </a>
+            </div>
+        {{/each}}
+    </div>
+</div>

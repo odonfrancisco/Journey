@@ -179,7 +179,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
 
 // Route to show particular group info
 router.get('/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'members'), (req, res, next) => {
-    Group.findById(req.params.id).populate('members', 'name username').populate('events', 'name')
+    Group.findById(req.params.id).populate('members', 'name username').populate('events', 'name eventPic address start end')
         .then(group => {
             if (group.admin.indexOf(req.session.passport.user) !== -1){
                 group.yes = true;

@@ -78,11 +78,26 @@ html, head, body {
   height: 50px;
   z-index: 4; }
 
-.event-row {
-  margin-top: 20px; }
+.event-div {
+  margin: 20px auto 20px auto;
+  padding: 10px 10px 10px 10px;
+  background-color: rgba(165, 118, 147, 0.733);
+  border-radius: 20px; }
 
-.event-row a {
+.event-div a {
   color: #faebd7; }
+
+.event-pics-div {
+  margin: 0 auto 20px auto;
+  padding: 10px 10px 10px 10px;
+  background-color: rgba(105, 81, 96, 0.733);
+  border-radius: 20px; }
+
+.comment-add {
+  margin: 7px 0 7px 0; }
+
+input {
+  color: black; }
 
 .sidenav span {
   display: block; }
@@ -215,6 +230,11 @@ username {
 .btn {
   margin: 2px; }
 
+.center {
+  margin-right: auto;
+  margin-left: auto;
+  display: inline-block; }
+
 @media (max-width: 768px) {
   #nav text {
     font-size: 3vw; }
@@ -223,14 +243,6 @@ username {
   .profile-pic {
     max-height: 130px;
     max-width: 200px;
-    border-radius: 6px; }
-  .event-pics-div {
-    margin-bottom: 20px;
-    padding: 10px 15px 10px 15px;
-    background-color: rgba(105, 81, 96, 0.733);
-    border-radius: 20px; } }
-
-input {
-  color: black; }
+    border-radius: 6px; } }
 
 /*# sourceMappingURL=style.css.map */

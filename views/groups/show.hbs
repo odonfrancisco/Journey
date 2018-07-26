@@ -1,17 +1,36 @@
-<img src="{{group.groupPic}}" class="event-pic"><br>
-<a href="/groups/edit/{{group._id}}"><input type="button" value="Edit {{group.name}}"></a>
-<a href="/groups/events/create/{{group._id}}"><input type="button" value="Add Event For {{group.name}}"></a>
-<br>
-<span>{{group.name}}</span><br>
-<span>{{group.description}}</span>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            {{#if group.yes}}
+                <a href="/groups/edit/{{group._id}}"><input type="button" class="btn btn-sm" value="Edit"></a>
+            {{/if}}
+        </div>
+        <div class="col-6">
+            <h1 class="text-center text-capitalize">{{group.name}}</h1>
+        </div>
+    </div>
+</div>
 
-<br><br>
+<div class="container-fluid">
+    <img src="{{group.groupPic}}" class="img-fluid"><br>
+    <div class="row">
+        <div class="col-3">
+            <a href="/groups/events/create/{{group._id}}"><input type="button" class="btn" value="Add Event"></a>
+        </div>
+        <div class="col-6">
+            <h5 class="text-center text-capitalize">{{group.description}}</h5>
+        </div>
+    </div>
+    
+</div>
+
+<br>
 
 Members: 
     {{#if group.yes}}
         <input id="edit-members-button" type="button" value="Edit" onclick="showList('edit-members-button', 'done-members-button', 'member-edit')">
-        <input id="add-members-button" type="button" value="Add Members" onclick="showForm('add-members-button', 'add-members-form', 'edit-members-button')">
         <input id="done-members-button" type="button" value="Done" style="display:none" onclick="showList('done-members-button', 'edit-members-button', 'member-edit')">
+        <input id="add-members-button" type="button" value="Add Members" onclick="showForm('add-members-button', 'add-members-form', 'edit-members-button')">
         <form id="add-members-form" {{!-- action="/groups/members/add/{{group._id}}" --}} onsubmit="addGroupMember('{{group._id}}')" {{!-- method="post" --}} style="display:none">
             <div id="usersField">
             </div>
@@ -37,11 +56,14 @@ Members:
     {{/each}}
 </ul>
 
-Events: 
+<div class="text-center">
+    <span class="h4">Events</span>
     {{#if group.yes}}
         <input id="edit-events-button" type="button" value="Edit" onclick="showList('edit-events-button', 'done-events-button', 'event-edit')">
         <input id="done-events-button" type="button" value="Done" style="display:none" onclick="showList('done-events-button', 'edit-events-button', 'event-edit')">
     {{/if}}
+</div> 
+    
 <ul>
     {{#each group.events}}
         <li><a href="/events/{{this._id}}">
@@ -51,6 +73,34 @@ Events:
         {{/if}}
     {{/each}}
 </ul>
+
+<div class="container-fluid">
+    <div class="row">
+    {{#each group.events}}
+        <div class="col-sm-5 col-xl-4 event-div">
+            <a href="/events/{{this._id}}"><img class="img-fluid" src="{{this.eventPic}}" class="event-pic"></a>
+            <a href="/events/{{this._id}}"><h3 class="text-center text-capitalize">{{this.name}}</h3></a>
+            <div class="row">
+                <span class="text-left col-6">
+                    Start: {{this.start.date}}<br>
+                    End: {{this.end.date}}
+                </span>
+                    {{#if this.address.zip}}
+                        <address class="text-right pull-right col-6">{{this.address.street}} {{this.address.apt}} {{this.address.city}} {{this.address.state}} {{this.address.zip}}</address>
+                    {{/if}}
+                    {{!-- <br><br> --}}
+            </div>
+            
+            {{#if ../group.yes}}    
+                <a href="/events/edit/{{this._id}}"><input type="button" class="btn btn-sm btn-block" value="Edit"></a>
+            {{/if}}
+            {{#if ../group.yes}}
+            <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}"><input type="button" class="btn btn-block" value="Remove from {{../group.name}}"</a>
+        {{/if}}
+        </div>
+    {{/each}}
+    </div>
+</div>
 
 
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
