@@ -99,10 +99,14 @@ passport.use('local-signup', new LocalStrategy(
             profilePic
           });
           if(groupId){
-            Group.findOne({groupId: groupId})
+            Group.findOne({groupId: groupId}).populate('events', 'guests')
               .then(group => {
-                group.members.push(newUser._id)
-                group.save()
+                let p1 = group.members.push(newUser._id);
+                let p2 = group.events.forEach(e => {
+                  e.guests.push(newUser._id);
+                  e.save();
+                });
+                Promise.all([p1, p2]).then(group.save()
                   .then(group => {
                     newUser.groups.push(group._id);
                     newUser.save((err) => {
@@ -114,7 +118,7 @@ passport.use('local-signup', new LocalStrategy(
                     console.log("Error in saving group on User Signup when user adds guestId", err);
                     next();
                   })
-                
+                )                
               })
               .catch(err => {
                 console.log('Error in saving user on signup when adding groupId to their groups', err);
