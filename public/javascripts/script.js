@@ -150,6 +150,45 @@ function hideComments(commentsId){
   document.getElementById(`${commentsId}-comments-button`).onclick=onclick;  
 }
 
+// Function to toggle between showing event grid or list in groups. WIll add to events view
+function showEventsGrid(button, show, hide){
+  const changeButton = document.getElementById(button);
+  const showElement = document.getElementById(show);
+  const hideElement = document.getElementById(hide);
+  let onclick;
+
+  if(changeButton.value==="List View"){
+    onclick = function onclick(event) {
+      showEventsGrid(button,hide, show);
+    };
+
+    changeButton.value="Grid View";
+    changeButton.onclick=onclick;
+  } else if(changeButton.value==="Grid View"){
+    onclick = function onclick(event) {
+      showEventsGrid(button, hide, show);
+    };
+
+    changeButton.value="List View";
+    changeButton.onclick=onclick;
+  }
+
+  showElement.style="";
+  hideElement.style="display:none";
+}
+
+
+/* Set the width of the side navigation to 250px */
+function openNav() {
+  document.getElementById("mySidenav").style.width = "370px";
+}
+
+/* Set the width of the side navigation to 0 */
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+
 
 
 // AXIOS WATTUP
@@ -279,15 +318,4 @@ function removeInvitedUser(userId, eventId){
     .then(req => {
       window.location.reload();
     })
-}
-
-
-/* Set the width of the side navigation to 250px */
-function openNav() {
-  document.getElementById("mySidenav").style.width = "370px";
-}
-
-/* Set the width of the side navigation to 0 */
-function closeNav() {
-  document.getElementById("mySidenav").style.width = "0";
 }

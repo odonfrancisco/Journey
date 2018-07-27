@@ -9,20 +9,23 @@
             <h1 class="text-center text-capitalize">{{group.name}}</h1>
         </div>
     </div>
-</div>
+{{!-- </div> --}}
 
-<div class="container-fluid">
+{{!-- <div class="container-fluid"> --}}
     <img src="{{group.groupPic}}" class="img-fluid"><br>
     <div class="row">
         <div class="col-3">
+            {{#if group.events}}
             <a href="/groups/events/create/{{group._id}}"><input type="button" class="btn" value="Add Event"></a>
+            {{else}}
+            {{/if}}
         </div>
         <div class="col-6">
             <h5 class="text-center text-capitalize">{{group.description}}</h5>
         </div>
     </div>
     
-</div>
+{{!-- </div> --}}
 
 <br>
 
@@ -56,25 +59,46 @@ Members:
     {{/each}}
 </ul>
 
-<div class="text-center">
-    <span class="h4">Events</span>
+{{#if group.events}}
+<div class="h4 text-center">Events
     {{#if group.yes}}
-        <input id="edit-events-button" type="button" value="Edit" onclick="showList('edit-events-button', 'done-events-button', 'event-edit')">
-        <input id="done-events-button" type="button" value="Done" style="display:none" onclick="showList('done-events-button', 'edit-events-button', 'event-edit')">
+    <input id="edit-events-button" type="button" class="btn-sm pull-right" value="Edit" onclick="showList('edit-events-button', 'done-events-button', 'event-edit')">
+    <input id="done-events-button" type="button" class="btn-sm" value="Done" style="display:none" onclick="showList('done-events-button', 'edit-events-button', 'event-edit')">
     {{/if}}
-</div> 
+</div>
     
-<ul>
-    {{#each group.events}}
-        <li><a href="/events/{{this._id}}">
-        {{this.name}}</a></li>
-        {{#if ../group.yes}}
-            <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}"><input type="button" value="Remove from {{../group.name}}"</a>
-        {{/if}}
-    {{/each}}
-</ul>
+<div class="text-right col-12">
+    <input id="events-view-button" class="btn btn-small" type="button" value="List View" onclick="showEventsGrid('events-view-button', 'event-list', 'event-grid')">
+</div>
 
-<div class="container-fluid">
+<div id="event-list" class="row" style="display:none">
+    {{#each group.events}}
+        <div class="col-12 col-md-6 event-list-item">
+            <div class="row justify-content-between">
+                <div class="col-7">
+                    <a class="h3" href="/events/{{this._id}}">
+                        {{this.name}}
+                    </a>
+                </div>
+                
+                {{#if ../group.yes}}
+                <div class="col-5">
+                    <a class="event-edit" style="display:none" href="/events/edit/{{this._id}}">
+                        <input type="button" class="btn btn-sm btn-block" value="Edit">
+                    </a>
+                    <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}">
+                        <input type="button" class="btn btn-sm btn-block" value="Remove from {{../group.name}}">
+                    </a>
+                </div>
+                
+            {{/if}}
+            </div>
+        </div>
+        
+    {{/each}}
+</div>
+
+<div id="event-grid">
     <div class="row">
     {{#each group.events}}
         <div class="col-sm-5 col-xl-4 event-div">
@@ -92,14 +116,19 @@ Members:
             </div>
             
             {{#if ../group.yes}}    
-                <a href="/events/edit/{{this._id}}"><input type="button" class="btn btn-sm btn-block" value="Edit"></a>
+                <a class="event-edit" style="display:none" href="/events/edit/{{this._id}}"><input type="button" class="btn btn-sm btn-block" value="Edit"></a>
+                <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}"><input type="button" class="btn btn-block" value="Remove from {{../group.name}}"</a>
             {{/if}}
-            {{#if ../group.yes}}
-            <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}"><input type="button" class="btn btn-block" value="Remove from {{../group.name}}"</a>
-        {{/if}}
         </div>
     {{/each}}
     </div>
+</div>
+{{else}}
+    <a href="/groups/events/create/{{group._id}}"><input type="button" class="btn btn-block" value="Add Event"></a>
+{{/if}}
+
+
+
 </div>
 
 

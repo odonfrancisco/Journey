@@ -1,11 +1,11 @@
 <div class="container-fluid">
     <div class="row">
-        <div class="col-3">
+        <div class="col-1">
             {{#if event.yes}}
                 <a href="/events/edit/{{event._id}}"><input type="button" class="btn btn-sm" value="Edit"></a>
             {{/if}}
         </div>
-        <div class="col-6">
+        <div class="col-10">
             <h1 class="text-center text-capitalize">{{event.name}}</h1>
         </div>
     </div>
@@ -51,17 +51,7 @@
     </div>
 
     <div class="row">
-        <div class="col-8">
-            {{#if event.location.coordinates}}
-                <input type="button" class="btn" id="showMap" value="Map" onclick="showMap()">
-                <input type="button" class="btn" id="hideMap" value="Hide Map" onclick="hideMap()" style="display:none">
-
-                <div id="event-map" style="display:none"></div>
-
-                <input id="location" style="display:none" value="{{event.location.coordinates}}">              
-            {{/if}}
-        </div>
-        <div class="col-4 text-right">
+        <div class="col-4 text-left">
             {{#if event.guests}}
             <input type="button" id="show-guests-button" value="Guests" class="btn" onclick="showGuests()">
             <input type="button" id="hide-guests-button" value="Hide Guests" class="btn" onclick="hideGuests()" style="display:none">
@@ -74,6 +64,16 @@
                     </ul>
                 {{/if}}
             </div>
+        </div>
+        <div class="col-8 text-right">
+            {{#if event.location.coordinates}}
+                <input type="button" class="btn" id="showMap" value="Map" onclick="showMap()">
+                <input type="button" class="btn" id="hideMap" value="Hide Map" onclick="hideMap()" style="display:none">
+
+                <div id="event-map" style="display:none"></div>
+
+                <input id="location" style="display:none" value="{{event.location.coordinates}}">              
+            {{/if}}
         </div>
     </div>
 

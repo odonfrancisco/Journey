@@ -25,7 +25,7 @@
       {{#if req.user.events}}
         <ul class="sub-list">
           {{#each req.user.events}}
-            <li style="display:none" class="all-events"><span><a href="/events/{{this._id}}">{{this.name}}</a></li>
+            <li style="display:none" class="all-events"><span><a href="/events/{{this._id}}"><abbr>{{this.name}}</abbr></a></li>
           {{/each}}
         </ul>
       {{/if}}</li>
@@ -75,6 +75,5 @@
     <script src='/javascripts/script.js'></script>
 
 
-{{{body.req}}}
   </body>
 </html>

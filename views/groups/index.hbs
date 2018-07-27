@@ -17,12 +17,12 @@
 </div>
 
 <div class="container-fluid">
-    <div class="row event-row">
+    <div class="row event-row justify-content-around">
         {{#each groups}}
-            <div class="col-sm-6 col-lg-4">
+            <div class="col-sm-5 col-lg-3 group-grid-item">
                 <div class="row justify-content-center">
                     <a href="/groups/{{this._id}}">
-                        <img class="img-fluid" src="{{this.groupPic}}">
+                        <img class="group-pic img-fluid rounded" src="{{this.groupPic}}">
                     </a>
                 </div>
                 <a href="/groups/{{this._id}}">

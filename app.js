@@ -82,6 +82,7 @@ app.use((req, res, next) => {
   User.findById(req.user._id).populate('events', 'name').populate('groups', 'name')
     .then(user => {
       req.user = user;
+      // console.log(user)
     });
   }
   // Allows request to be accessed from handlebars

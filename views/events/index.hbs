@@ -1,5 +1,5 @@
 
-<div class="conatiner-fluid">
+<div class="container-fluid">
     <div class="row">
         <div class="col-3">
             <a href="/events/create"><input type="button" class="btn" value="Create Event"></a>
@@ -11,16 +11,52 @@
             </form>
         </div>
         <div class="col-6">
-            <h2 class="text-center">Events</h2>
+            <h1 class="text-center mt-4">Events</h1>
         </div>
     </div>
 </div>
 
-<div class="container-fluid">
-    <div class="row">
+<div class="text-right col-12">
+    <input id="events-view-button" class="btn btn-small" type="button" value="List View" onclick="showEventsGrid('events-view-button', 'event-list', 'event-grid')">
+</div>
+
+<div id="event-list" class="row" style="display:none">
+    {{#each event}}
+        <div class="col-12 col-md-6 event-list-item">
+            <div class="row justify-content-between">
+                <div class="col-7">
+                    <a class="h3" href="/events/{{this._id}}">
+                        {{this.name}}
+                    </a>
+                </div>
+                
+                {{#if this.yes}}
+                <div class="col-5">
+                    <a class="event-edit" style="display:none" href="/events/edit/{{this._id}}">
+                        <input type="button" class="btn btn-sm btn-block" value="Edit">
+                    </a>
+                    <a style="display:none" class="event-edit" href="/groups/events/remove/{{../group._id}}/{{this._id}}">
+                        <input type="button" class="btn btn-sm btn-block" value="Remove from {{../group.name}}">
+                    </a>
+                </div>
+                
+            {{/if}}
+            </div>
+        </div>
+        
+    {{/each}}
+</div>
+
+
+<div id="event-grid" class="container-fluid">  
+    <div class="row justify-content-center  ">
     {{#each event}}
         <div class="col-md-6 col-xl-4 event-div">
-            <a href="/events/{{this._id}}"><img class="img-fluid" src="{{this.eventPic}}" class="event-pic"></a>
+            <div class="col-12">
+                <div class="row justify-content-center">
+                    <a href="/events/{{this._id}}"><img class="img-fluid" src="{{this.eventPic}}" class="event-pic"></a>
+                </div>
+            </div>
             <a href="/events/{{this._id}}"><h3 class="text-center text-capitalize">{{this.name}}</h3></a>
             <p class="text-center">{{this.description}}</p>
             <div class="row">

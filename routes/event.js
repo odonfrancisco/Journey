@@ -47,6 +47,10 @@ function checkUser(id) {
 // Route to display all events a user is a guest of
 router.get('/', ensureLoggedIn('/auth/login'), (req, res, next) => {
     // Finds events that the user created or that they're a guest of
+    User.findById(req.session.passport.user).populate('events', 'name')
+        .then(user => {
+            console.log(user);
+        })
     Event.find({$or: [{creatorId: req.session.passport.user}, {guests: {$in: [req.session.passport.user]}}]}).sort({'start.date': 1})
         .then(event => {
             event.forEach(e => {

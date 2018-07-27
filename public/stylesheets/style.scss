@@ -2,7 +2,9 @@ body {
   // padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: #faebd7;
-  background-color: #333333
+  // background-color: #222323;
+  // background-color: #333333;
+  background-color: #272727;
 }
 
 html, head, body{
@@ -74,7 +76,7 @@ html, head, body{
 }
 
 #hide-events , #hide-groups{
-  padding: 10px 20px 2px 2px;
+  // padding: 10px 20px 2px 2px;
   height: 7px;
 }
 // .profile-pic{
@@ -106,9 +108,22 @@ html, head, body{
 .event-pics-div{
   margin: 0 auto 20px auto;
   padding: 10px 10px 10px 10px;
-  background-color: rgba(105, 81, 96, 0.733);
+  background-color: rgba(94, 86, 90, 0.733);
   border-radius: 20px;
 }
+
+.group-grid-item{
+  margin: 0 auto 20px auto;
+  // padding: 5px;
+  background-color: rgba(94, 86, 90, 0.733);
+  border-radius: 20px;
+}
+
+.group-pic{
+  padding: 10px;
+  // border-radius: 20px;
+}
+
 
 .comment-add{
   margin: 7px 0 7px 0;
@@ -278,6 +293,12 @@ username{
   margin-right: auto;
   margin-left: auto;
   display: inline-block
+}
+
+.event-list-item{
+  height: 100px;
+  background-color: grey;
+  border: 1px solid black;
 }
 
 

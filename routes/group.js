@@ -207,7 +207,7 @@ router.get('/events/create/:id', ensureLoggedIn('/auth/login'), checkUser('id', 
 // Route to create new event and save to group
 router.post('/events/create/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'members'), uploadCloud.single('eventPic'), (req, res, next) => {
     // Destructure req.body
-    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip} = req.body;
+    const {name, description, startDate, startTime, endDate, endTime, street, apt, city, state, zip, latitude, longitude} = req.body;
     // Create address object
     const address = {street, apt, city, state, zip};
     // Create start object
@@ -227,6 +227,15 @@ router.post('/events/create/:id', ensureLoggedIn('/auth/login'), checkUser('id',
     // Uploads event banner url only if it was uploaded
     if(req.file) {eventPic = req.file.secure_url;}
 
+    // Gets location of event
+    let location;
+    if(latitude && longitude){
+        location = {
+            type: 'Point',
+            coordinates: [latitude, longitude]
+        };
+    }
+
     // Creates new event using model constructor 
     let newEvent = new Event({
         creatorId,
@@ -236,7 +245,8 @@ router.post('/events/create/:id', ensureLoggedIn('/auth/login'), checkUser('id',
         end,
         eventPic,
         address,
-        groupId: req.group._id
+        groupId: req.group._id,
+        location
     });
 
     // Variable for id of new event. Would be ObjectId(XXXXX) instead of XXXX
