@@ -17,7 +17,7 @@
       
         <span><li class="user-nav"><a href="/users/{{req.user._id}}" ><img class="profile-pic" src="{{req.user.profilePic}}"></a></li></span>
         <span><li class="user-nav"><a href="/users/{{req.user._id}}"><span>{{req.user.name.first}}</span></a></li></span>
-    {{/if}}
+
     <li><span><a href="/events">Events</a>
       <img src="/images/plus-icon.png" id="show-events" onclick="showList('show-events', 'hide-events', 'all-events')">
       <img src="/images/minus-icon.png" style="display:none" id="hide-events" onclick="showList('hide-events', 'show-events', 'all-events')">
@@ -42,6 +42,10 @@
       {{/if}}</li>
     
     <li><span><a href="/auth/logout">Logout :(</a></span></li>
+    {{else}}
+      <a href='/auth/login'><input type="button" class="btn" value="Login!"></a>
+      <a href="/auth/signup"><input type="button" class="btn" value="Sign Up!"></a>
+    {{/if}}
 
     </ul>
 

@@ -5,8 +5,10 @@
     {{else}}
     <form method="post" action="/events/create" onsubmit="setTimeout(()=>{},5000)" enctype="multipart/form-data">
 {{/if}}
-    <input type="text" name="name" placeholder="Event Name" required>
-
+    <div class="form-group">
+        <input type="text" class="form-control" name="name" placeholder="Event Name" required>
+    </div>
+    
     <input type="text" name="description" placeholder="How Would You Describe This Magically?">
 
     <br><br>

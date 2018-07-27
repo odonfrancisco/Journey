@@ -15,7 +15,7 @@ authRoutes.get("/login", ensureLoggedOut(), (req, res, next) => {
 });
 
 authRoutes.post("/login", ensureLoggedOut(), passport.authenticate("local-login", {
-  successRedirect: "/",
+  successRedirect: "/events",
   failureRedirect: "/auth/login",
   failureFlash: true,
   passReqToCallback: true

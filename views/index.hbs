@@ -1,2 +1,11 @@
 <h1>{{title}}</h1>
 <p>Welcome to {{title}}</p>
+{{#unless req.user}}
+<a href='/auth/login'><input type="button" value="Login!"></a>
+<a href="/auth/signup"><input type="button" value="Sign Up!"></a>
+{{else}}
+
+<h3>
+You're already logged in!! Click on that hamburger and check yo stuff out!
+</h3>
+{{/unless}}

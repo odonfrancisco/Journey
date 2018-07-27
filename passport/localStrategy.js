@@ -2,6 +2,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const User          = require('../models/User');
 const bcrypt        = require('bcrypt');
+const Group         = require('../models/Group');
 
 function capitalize(val) {
   if (typeof val !== 'string') val = '';
@@ -97,12 +98,34 @@ passport.use('local-signup', new LocalStrategy(
             password: hashPass, 
             profilePic
           });
-          if(groupId) newUser.groups.push(groupId);
-
-          newUser.save((err) => {
-            if (err){ next(null, false, { message: newUser.errors}); }
-            return next(null, newUser);
-          });
+          if(groupId){
+            Group.findOne({groupId: groupId})
+              .then(group => {
+                group.members.push(newUser._id)
+                group.save()
+                  .then(group => {
+                    newUser.groups.push(group._id);
+                    newUser.save((err) => {
+                      if (err){ next(null, false, { message: newUser.errors}); }
+                      return next(null, newUser);
+                    })
+                  })
+                  .catch(err => {
+                    console.log("Error in saving group on User Signup when user adds guestId", err);
+                    next();
+                  })
+                
+              })
+              .catch(err => {
+                console.log('Error in saving user on signup when adding groupId to their groups', err);
+                next();
+              });
+          } else{
+            newUser.save((err) => {
+              if (err){ next(null, false, { message: newUser.errors}); }
+              return next(null, newUser);
+            });
+          }          
         }
       });
     });

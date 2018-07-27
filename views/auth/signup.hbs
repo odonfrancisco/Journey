@@ -2,44 +2,55 @@
 <h2>Signup</h2>
 
 <form action="/auth/signup" method="POST" id="form-container" enctype="multipart/form-data">
-  <input id="firstName" type="text" name="firstName" placeholder="First Name" required> 
-  <input id="lastName" type="text" name="lastName" placeholder="Last Name" required>
-  <br><br>
+<div class="row">
+  <div class="col-6">
+    <div class="form-inline">
+      <input class="form-control" id="firstName" type="text" name="firstName" placeholder="First Name" required> 
+      <input class="form-control" id="lastName" type="text" name="lastName" placeholder="Last Name" required>
+    </div>
+    <br><br>
 
-  <input id="username" type="text" name="username" placeholder="Username" {{!-- onkeyup="javascript:this.value=this.value.toLowerCase()"; --}} required> *
+    <input id="username" class="form-control" type="text" name="username" placeholder="Username" {{!-- onkeyup="javascript:this.value=this.value.toLowerCase()"; --}} required> *
 
-  <br><br>
+    <br><br>
 
-  <input id="email" type="text" name="email" placeholder="Email" required> *
+    <input id="email" type="text" name="email" placeholder="Email" required> *
 
-  <br><br>
+    <br><br>
+    
+    <input id="phone" type="tel" class="form-control" name="phone" placeholder="305-213-7837" {{!-- pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" --}} onchange="addSpaces(this.value)" required>
+    {{!-- <label>305-213-7837</label> --}}
+
+    <br><br>
+
+    <div class="form-inline">
+      <input id="password" class="form-control" type="password" name="password" placeholder="Password" required> *
+      <br>
+      <input id="password2" class="form-control" type="password" name="password2" placeholder="Confirm Password" required> *
+
+    </div>
+  </div>
   
-  <input id="phone" type="tel" name="phone" placeholder="305-213-7837" {{!-- pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" --}} onchange="addSpaces(this.value)" required>
-  <label>305-213-7837</label>
-
   <br><br>
+  <div class="col-6">
+    <h3 class="text-center">Not Required</h3>
+    <input id="groupId" type="text" name="groupId" placeholder="Family Id (if provided)">
+    <br><br>
+    <label for="profile">Profile Picture</label><br>
+    <input id="profile" type="file" name="profile">
+  </div>
+</div>
 
-  <input id="password" type="password" name="password" placeholder="Password" required> *
-  <br>
-  <input id="password2" type="password" name="password2" placeholder="Confirm Password" required> *
-
-  <br><br>
-
-  <input id="groupId" type="text" name="groupId" placeholder="Family Id (if provided)">
-  <br><br>
-  <label for="profile">Profile Picture</label><br>
-  <input id="profile" type="file" name="profile">
-
-Error Message: {{message}}
-
+<br>
   {{#if message }}
     <div class="error-message">{{ message }}</div>
   {{/if}}
 
   <br><br>
 
-  <button>Create account</button>
+  <input type="submit" class="btn btn-block" value="Create account">
 
+  <br>
   <p class="account-message">
     Do you already have an account?
     <a href="/auth/login">Login</a>
