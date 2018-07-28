@@ -285,13 +285,13 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), uploadCloud.fields([{nam
     find.then(user => {Event.findByIdAndUpdate(req.params.id, {name, description, address, start, end, eventId})
         .then(event => {
             // If a user was added to event by event admin, then add user(s) id to guests array in event obj
-            if (usersArray.length > 0) event.guests.push(...usersArray);
+            if (usersArray.length > 0) event.guests.unshift(...usersArray);
 
             // If user uploads event banner pic, sets it
             if (req.files.eventPic) event.eventPic = eventPic;
 
             // If user uploads multiple pictures to event, sets it
-            if (req.files.pictures) event.pictures.push(...pictures);
+            if (req.files.pictures) event.pictures.unshift(...pictures);
 
             if (latitude && longitude) event.location = location;
 
@@ -464,7 +464,7 @@ router.post('/pictures/comment/:picId', ensureLoggedIn('/auth/login'), (req, res
                 creatorId: req.session.passport.user
             };
             // Pushes comment obj to var pic 
-            pic.comments.push(comment);
+            pic.comments.unshift(comment);
             // Saves event after adding comment to its picture's comment
             event.save()
                 .then(event => {
@@ -514,7 +514,7 @@ router.post('/join', ensureLoggedIn('/auth/login'), (req, res, next) => {
     const eventId = req.body.eventId.toLowerCase();
     Event.findOne({eventId: eventId})
         .then(event => {
-            event.guests.push(req.session.passport.user);
+            event.guests.unshift(req.session.passport.user);
             event.save()
                 .catch(err => {
                     console.log('Error in saving event after user attempted to join using eventId: ', err);
