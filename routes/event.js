@@ -353,7 +353,7 @@ router.post('/pictures/add/:id', uploadCloud.array('image'), (req, res, next) =>
     Event.findById(req.params.id)
         .then(event => {
             // If pictures were uploaded, add them to event's pictures
-            if (req.files) event.pictures.push(...pictures);
+            if (req.files) event.pictures.unshift(...pictures);
             // Saves event after adding pictures
             event.save()
                 .then(event => {
