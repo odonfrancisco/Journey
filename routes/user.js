@@ -269,7 +269,7 @@ router.post('/add/friend/:id', ensureLoggedIn('/auth/login'), checkEditUser(), (
     find.then(user => User.findById(req.params.id)
         .then(user => {
             // Adds users id's to friends array
-            user.friends.push(...usersArray);
+            user.friends.unshift(...usersArray);
             // console.log('user.friends after pushing usersArray: ', user.friends)
             // Saves user after adding its friends
             user.save()

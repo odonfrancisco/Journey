@@ -71,7 +71,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     });
 
     // Adds user who created group to admin array
-    newGroup.admin.push(req.session.passport.user);
+    newGroup.admin.unshfit(req.session.passport.user);
 
     // Makes the customizable groupId the id of the group
     // to satisfy its requirement on the backend to be unique
@@ -369,7 +369,7 @@ router.post('/edit/:id', ensureLoggedIn('/auth/login'), checkUser('id', 'admin')
             if (req.file) group.groupPic = groupPic;
             console.log('UsersArray: ', usersArray);
             if (usersArray.length > 0){
-                group.admin.push(...usersArray);
+                group.admin.unshift(...usersArray);
             }
             group.save()
                 .catch(err => {
@@ -479,7 +479,7 @@ router.post('/members/add/:groupId', ensureLoggedIn('/auth/login'), checkUser('g
     }
 
     find.then(user => {
-        req.group.members.push(...usersArray);
+        req.group.members.unshift(...usersArray);
         req.group.save()
             .then(group => {
                 res.send(group);
@@ -586,10 +586,10 @@ router.post('/join', ensureLoggedIn('/auth/login'), (req, res, next) => {
             // If user doesn't belong in group, adds user to group.guests, saves group 
                 // and then adds the group's actual ID to user's groups
             } else if(group.members.indexOf(user) == -1){
-                group.members.push(user);
+                group.members.unshift(user);
                 group.save()
                     .then(group => {
-                        req.user.groups.push(group._id);
+                        req.user.groups.unshift(group._id);
                         req.user.save()
                             .then(user => {
                                 res.send(user);
@@ -639,7 +639,7 @@ router.get("/remove-member/:groupId/:userId", ensureLoggedIn('/auth/login'), che
                     let memNum = Math.floor(Math.random()*memLength);
                     console.log('memNum: ', memNum);
                     // Adds random member to admin array if no more admin left
-                    req.group.admin.push(req.group.members[memNum]);
+                    req.group.admin.unshift(req.group.members[memNum]);
             }
         }
         // Saves group after removing a member

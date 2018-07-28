@@ -35,7 +35,7 @@ router.post('/events/pictures/comment/:picId', (req, res, next) => {
                 creatorId: req.session.passport.user
             };
             // Pushes comment obj to var pic 
-            pic.comments.push(comment);
+            pic.comments.unshift(comment);
             // Saves event after adding comment to its picture's comment
             event.save()
                 .then(event => {
