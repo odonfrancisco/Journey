@@ -258,7 +258,7 @@ router.post('/events/create/:id', ensureLoggedIn('/auth/login'), checkUser('id',
     newEvent.save()
         .then(event => {
             // Pushed the event ID to the group's events array
-            req.group.events.push(newEvent._id);
+            req.group.events.unshift(newEvent._id);
             // Saves group after adding the event id
             req.group.save()
                 .then(group => {
