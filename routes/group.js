@@ -71,7 +71,7 @@ router.post('/create', ensureLoggedIn('/auth/login'), uploadCloud.single('groupP
     });
 
     // Adds user who created group to admin array
-    newGroup.admin.unshfit(req.session.passport.user);
+    newGroup.admin.push(req.session.passport.user);
 
     // Makes the customizable groupId the id of the group
     // to satisfy its requirement on the backend to be unique
