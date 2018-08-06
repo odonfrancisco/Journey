@@ -7,6 +7,10 @@ html, head, body {
   margin: 0;
   padding: 0; }
 
+.profile-pic {
+  height: 150px;
+  border-radius: 7px; }
+
 /* The side navigation menu */
 .sidenav {
   height: 100%;
